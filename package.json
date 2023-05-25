@@ -6,18 +6,28 @@
   "author": "CV-Gate <miguel.mendoza@vizzuality.com>",
   "license": "MIT",
   "dependencies": {
-    "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.9",
+    "alpinejs": "^3.12.1",
     "postcss-scss": "^4.0.6"
   },
   "scripts": {
     "build": "postcss static/css/styles.scss -o static/css/styles.css",
-    "watch": "postcss static/css/styles.scss -x .scss -w -o static/css/styles.css"
+    "build:js": "parcel build",
+    "watch": "postcss static/css/styles.scss -x .scss -w -o static/css/styles.css",
+    "watch:js": "parcel watch"
+  },
+  "targets": {
+    "app": {
+      "source": "static/js/app.js",
+      "distDir": "static/build"
+    }
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.3",
     "autoprefixer": "^10.4.14",
     "concurrently": "^8.0.1",
     "marked": "^4.3.0",
+    "parcel": "^2.8.3",
     "postcss": "^8.4.23",
     "postcss-cli": "^10.1.0",
     "postcss-watch": "^0.1.1",

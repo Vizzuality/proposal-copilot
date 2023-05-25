@@ -8,3 +8,4 @@ os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = os.getenv(
     "OAUTHLIB_INSECURE_TRANSPORT", "1"
 )
 secret_key = os.getenv("SECRET_KEY")
+upload_folder = os.getenv("UPLOAD_FOLDER")

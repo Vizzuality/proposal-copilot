@@ -1,4 +1,7 @@
 openai
-flask
+flask[async]
 python-dotenv
 langchain
+pypdf
+faiss-cpu
+tiktoken

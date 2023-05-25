@@ -1,3 +1,6 @@
+# app
+docs
+faiss_index_react
 # common
 .DS_Store
 .env
@@ -16,6 +19,7 @@ logs/
 #auth
 client_secret.json
 # Node.js
+.parcel-cache
 node_modules/
 *.log
 # CSS build output
