@@ -2,6 +2,9 @@
 module.exports = {
   content: ["./templates/**/*.html", "./static/**/*.js"],
   theme: {
+    colors: {
+      vizzuality: "#2ba4a0",
+    },
     extend: {
       fontFamily: {
         sans: ["inter", "sans-serif"],

@@ -1,7 +1,7 @@
 import Alpine from "alpinejs";
 Alpine.store("uploadStore", {
-  showForm: true,
-  title: "",
+  showForm: false,
+  title: "Thomsom Okanagan Platform",
 });
 
 // Singleton function
