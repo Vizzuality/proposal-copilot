@@ -5,3 +5,6 @@ langchain
 pypdf
 faiss-cpu
 tiktoken
+asyncio
+futures
+werkzeug
