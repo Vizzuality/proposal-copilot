@@ -23,42 +23,42 @@ def new_section_function():
             "title": "User Prompt",
             "prompt": request.form.get("section-prompt"),
         },
-        {
-            "title": "Engagement Objective",
-            "prompt": "what is The primary objective of this engagement",
-        },
-        {
-            "title": "Promotion & Stakeholders",
-            "prompt": "Who is promoting this engagement and stakeholders",
-        },
-        {
-            "title": "Reason",
-            "prompt": "why this is needed",
-        },
-        {
-            "title": "Timeline",
-            "prompt": "when this is needed",
-        },
-        {
-            "title": "Todo List",
-            "prompt": "Give me the whole list of things to do",
-        },
-        {
-            "title": "Technical Requirements",
-            "prompt": "List any possible technical requirement",
-        },
-        {
-            "title": "Risks & Caveats",
-            "prompt": "List any possible risk or caveat",
-        },
-        {
-            "title": "Initial Platform Status",
-            "prompt": "Describe if there is current status of the platform, if there was something developed before, also posssible technologies used",
-        },
-        {
-            "title": "Special Conditions",
-            "prompt": "Describe if there is any risk or special condition",
-        },
+        # {
+        #     "title": "Engagement Objective",
+        #     "prompt": "what is The primary objective of this engagement",
+        # },
+        # {
+        #     "title": "Promotion & Stakeholders",
+        #     "prompt": "Who is promoting this engagement and stakeholders",
+        # },
+        # {
+        #     "title": "Reason",
+        #     "prompt": "why this is needed",
+        # },
+        # {
+        #     "title": "Timeline",
+        #     "prompt": "when this is needed",
+        # },
+        # {
+        #     "title": "Todo List",
+        #     "prompt": "Give me the whole list of things to do",
+        # },
+        # {
+        #     "title": "Technical Requirements",
+        #     "prompt": "List any possible technical requirement",
+        # },
+        # {
+        #     "title": "Risks & Caveats",
+        #     "prompt": "List any possible risk or caveat",
+        # },
+        # {
+        #     "title": "Initial Platform Status",
+        #     "prompt": "Describe if there is current status of the platform, if there was something developed before, also posssible technologies used",
+        # },
+        # {
+        #     "title": "Special Conditions",
+        #     "prompt": "Describe if there is any risk or special condition",
+        # },
     ]
 
     for prompt in prompts:

@@ -43,11 +43,15 @@ const apiFunctionFactory = {
         console.error("Error:", error);
       });
   },
-  newSection: function () {
+  newSection: function (formId = null) {
     const url = "/new-section";
-    const form = document.getElementById("new-section");
-    const formData = new FormData(form);
-
+    let formData;
+    if (formId && document.getElementById(formId)) {
+      const form = document.getElementById(formId);
+      formData = new FormData(form);
+    } else {
+      formData = new FormData(); // empty FormData object
+    }
     return fetch(url, {
       method: "POST",
       body: formData,
@@ -131,7 +135,28 @@ document
   .addEventListener("submit", function (event) {
     console.log("submit");
     event.preventDefault();
-    SingletonFunction.callFunction(apiFunctionFactory.newSection);
+    SingletonFunction.callFunction(
+      apiFunctionFactory.newSection,
+      "new-section"
+    );
   });
+document.body.addEventListener("click", function (event) {
+  if (event.target.matches(".elaborate")) {
+    console.log("elaborate button clicked");
+    event.preventDefault();
+    SingletonFunction.callFunction(apiFunctionFactory.newSection);
+  }
+});
+
+document.addEventListener("alpine:init", () => {
+  Alpine.data("buttonHandlers", () => ({
+    elaborate(event) {
+      event.preventDefault();
+      console.log("elaborate button clicked");
+      // Call your function here
+    },
+    // Other handlers here
+  }));
+});
 
 Alpine.start();
