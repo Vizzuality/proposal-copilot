@@ -43,8 +43,8 @@ const apiFunctionFactory = {
         console.error("Error:", error);
       });
   },
-  newSection: function (formId = null) {
-    const url = "/new-section";
+  analyzePDF: function (formId = null) {
+    const url = "/analyze-pdf";
     let formData;
     if (formId && document.getElementById(formId)) {
       const form = document.getElementById(formId);
@@ -52,6 +52,7 @@ const apiFunctionFactory = {
     } else {
       formData = new FormData(); // empty FormData object
     }
+    console.log(formData);
     return fetch(url, {
       method: "POST",
       body: formData,
@@ -136,27 +137,46 @@ document
     console.log("submit");
     event.preventDefault();
     SingletonFunction.callFunction(
-      apiFunctionFactory.newSection,
+      apiFunctionFactory.analyzePDF,
       "new-section"
     );
   });
-document.body.addEventListener("click", function (event) {
-  if (event.target.matches(".elaborate")) {
-    console.log("elaborate button clicked");
-    event.preventDefault();
-    SingletonFunction.callFunction(apiFunctionFactory.newSection);
-  }
-});
 
 document.addEventListener("alpine:init", () => {
   Alpine.data("buttonHandlers", () => ({
     elaborate(event) {
       event.preventDefault();
       console.log("elaborate button clicked");
-      // Call your function here
+      const buttonData = getButtonData(event.target);
+      const formData = new FormData();
+      console.log(buttonData.textContent);
+      console.log(buttonData.sectionName);
+      formData.append("section-prompt", buttonData.textContent);
+      formData.append("section-title", buttonData.sectionName);
+      SingletonFunction.callFunction(apiFunctionFactory.analyzePDF, formData);
     },
     // Other handlers here
   }));
 });
+
+function getButtonData(button) {
+  // Get the closest ancestor div with an id that starts with "section-container-"
+  const containerDiv = button.closest('div[id^="section-container-"]');
+
+  if (!containerDiv) {
+    console.error(
+      "Button must be inside a div with an id that starts with 'section-container-'."
+    );
+    return null;
+  }
+
+  // Extract the dynamic section name from the id
+  const sectionName = containerDiv.id.slice("section-container-".length);
+
+  // Get the text inside the div
+  const textContent = containerDiv.innerText;
+
+  return { sectionName, textContent };
+}
 
 Alpine.start();

@@ -7,8 +7,7 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.llms import OpenAI
 import asyncio
 
-new_section = Blueprint("new_section", __name__)
-output_dict = {}
+analyze_pdf = Blueprint("analyze_pdf", __name__)
 embeddings = OpenAIEmbeddings()
 new_vectorstore = FAISS.load_local("faiss_index_react", embeddings)
 qa = RetrievalQA.from_chain_type(
@@ -16,11 +15,12 @@ qa = RetrievalQA.from_chain_type(
 )
 
 
-@new_section.route("/new-section", methods=["POST"])
-def new_section_function():
+@analyze_pdf.route("/analyze-pdf", methods=["POST"])
+def analyze_pdf_function():
+    output_dict = {}
     prompts = [
         {
-            "title": "User Prompt",
+            "title": request.form.get("section-title"),
             "prompt": request.form.get("section-prompt"),
         },
         # {
