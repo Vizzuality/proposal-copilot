@@ -7,6 +7,8 @@ Alpine.store("uploadStore", {
 // Singleton function
 const SingletonFunction = (() => {
   function callFunction(functionCalled, params) {
+    console.log("singleton params:");
+    console.log(params);
     return functionCalled(params);
   }
 
@@ -43,16 +45,16 @@ const apiFunctionFactory = {
         console.error("Error:", error);
       });
   },
-  analyzePDF: function (formId = null) {
+  analyzePDF: function (formId = null, formData = null) {
     const url = "/analyze-pdf";
-    let formData;
     if (formId && document.getElementById(formId)) {
       const form = document.getElementById(formId);
       formData = new FormData(form);
-    } else {
-      formData = new FormData(); // empty FormData object
+      formData.append("analysis-type", "new-section");
+    } else if (!formData) {
+      formData = new FormData(); // create a new empty FormData object if no formId and no formData provided
+      console.log("I'm deleting your data");
     }
-    console.log(formData);
     return fetch(url, {
       method: "POST",
       body: formData,
@@ -62,7 +64,6 @@ const apiFunctionFactory = {
         if (data.error) {
           document.getElementById("prompt-response").innerText = data["error"];
         } else {
-          console.log(data);
           const editorContent = document.getElementById("editor-content"); // get editor-content element
           for (const key in data) {
             // clone template node and remove the id
@@ -136,10 +137,7 @@ document
   .addEventListener("submit", function (event) {
     console.log("submit");
     event.preventDefault();
-    SingletonFunction.callFunction(
-      apiFunctionFactory.analyzePDF,
-      "new-section"
-    );
+    apiFunctionFactory.analyzePDF("new-section");
   });
 
 document.addEventListener("alpine:init", () => {
@@ -149,11 +147,13 @@ document.addEventListener("alpine:init", () => {
       console.log("elaborate button clicked");
       const buttonData = getButtonData(event.target);
       const formData = new FormData();
-      console.log(buttonData.textContent);
-      console.log(buttonData.sectionName);
       formData.append("section-prompt", buttonData.textContent);
       formData.append("section-title", buttonData.sectionName);
-      SingletonFunction.callFunction(apiFunctionFactory.analyzePDF, formData);
+      formData.append("analysis-type", "elaborate");
+      for (var pair of formData.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+      }
+      apiFunctionFactory.analyzePDF(null, formData);
     },
     // Other handlers here
   }));

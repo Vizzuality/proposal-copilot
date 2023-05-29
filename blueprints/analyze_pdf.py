@@ -18,48 +18,63 @@ qa = RetrievalQA.from_chain_type(
 @analyze_pdf.route("/analyze-pdf", methods=["POST"])
 def analyze_pdf_function():
     output_dict = {}
-    prompts = [
-        {
-            "title": request.form.get("section-title"),
-            "prompt": request.form.get("section-prompt"),
-        },
-        # {
-        #     "title": "Engagement Objective",
-        #     "prompt": "what is The primary objective of this engagement",
-        # },
-        # {
-        #     "title": "Promotion & Stakeholders",
-        #     "prompt": "Who is promoting this engagement and stakeholders",
-        # },
-        # {
-        #     "title": "Reason",
-        #     "prompt": "why this is needed",
-        # },
-        # {
-        #     "title": "Timeline",
-        #     "prompt": "when this is needed",
-        # },
-        # {
-        #     "title": "Todo List",
-        #     "prompt": "Give me the whole list of things to do",
-        # },
-        # {
-        #     "title": "Technical Requirements",
-        #     "prompt": "List any possible technical requirement",
-        # },
-        # {
-        #     "title": "Risks & Caveats",
-        #     "prompt": "List any possible risk or caveat",
-        # },
-        # {
-        #     "title": "Initial Platform Status",
-        #     "prompt": "Describe if there is current status of the platform, if there was something developed before, also posssible technologies used",
-        # },
-        # {
-        #     "title": "Special Conditions",
-        #     "prompt": "Describe if there is any risk or special condition",
-        # },
-    ]
+
+    if request.form.get("analysis-type") == "new-section":
+        prompts = [
+            {
+                "title": request.form.get("section-title"),
+                "prompt": request.form.get("section-prompt"),
+            }
+        ]
+    elif request.form.get("analysis-type") == "elaborate":
+        original_prompt = request.form.get("section-prompt")
+        prompt = f"""Find all related information to this text, in the most elaborated way possible; avoid repetition: {original_prompt} """
+        prompts = [
+            {"title": "elaboratedSection", "prompt": prompt},
+        ]
+    else:
+        prompts = [
+            {
+                "title": request.form.get("section-title"),
+                "prompt": request.form.get("section-prompt"),
+            },
+            {
+                "title": "Engagement Objective",
+                "prompt": "what is The primary objective of this engagement",
+            },
+            {
+                "title": "Promotion & Stakeholders",
+                "prompt": "Who is promoting this engagement and stakeholders",
+            },
+            {
+                "title": "Reason",
+                "prompt": "why this is needed",
+            },
+            {
+                "title": "Timeline",
+                "prompt": "when this is needed",
+            },
+            {
+                "title": "Todo List",
+                "prompt": "Give me the whole list of things to do",
+            },
+            {
+                "title": "Technical Requirements",
+                "prompt": "List any possible technical requirement",
+            },
+            {
+                "title": "Risks & Caveats",
+                "prompt": "List any possible risk or caveat",
+            },
+            {
+                "title": "Initial Platform Status",
+                "prompt": "Describe if there is current status of the platform, if there was something developed before, also posssible technologies used",
+            },
+            {
+                "title": "Special Conditions",
+                "prompt": "Describe if there is any risk or special condition",
+            },
+        ]
 
     for prompt in prompts:
         # asyncio.run creates a new event loop and runs the coroutine until it's done
