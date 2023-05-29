@@ -35,10 +35,6 @@ def analyze_pdf_function():
     else:
         prompts = [
             {
-                "title": request.form.get("section-title"),
-                "prompt": request.form.get("section-prompt"),
-            },
-            {
                 "title": "Engagement Objective",
                 "prompt": "what is The primary objective of this engagement",
             },
