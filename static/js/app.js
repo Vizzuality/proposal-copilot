@@ -1,4 +1,5 @@
 import Alpine from "alpinejs";
+import { Ripple, initTE } from "tw-elements";
 Alpine.store("uploadStore", {
   showForm: false,
   title: "",
@@ -219,5 +220,9 @@ function editContentInDOM(data) {
     }
   }
 }
+const tooltipTriggerList = [].slice.call(
+  document.querySelectorAll('[data-te-toggle="tooltip"]')
+);
 
+initTE({ Ripple });
 Alpine.start();
