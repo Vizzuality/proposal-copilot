@@ -18,6 +18,42 @@ const SingletonFunction = (() => {
   };
 })();
 
+Alpine.store("menuStore", {
+  state: "initial",
+  activeInterface: "",
+  showInterface(interfaceName) {
+    this.activeInterface = interfaceName;
+    switch (interfaceName) {
+      case "interface1":
+        this.state = "state1";
+        break;
+      case "interface2":
+        this.state = "state2";
+        break;
+      case "uploadForm":
+        this.state = "uploadForm";
+        break;
+      case "interface4":
+        this.state = "state4";
+        break;
+      case "newSection":
+        this.state = "newSection";
+        break;
+      case "interface6":
+        this.state = "state6";
+        break;
+      case "interface7":
+        this.state = "state7";
+        break;
+      case "interface8":
+        this.state = "state8";
+        break;
+      default:
+        this.state = "initial";
+    }
+  },
+});
+
 // Factory for API call functions
 const apiFunctionFactory = {
   uploadFile: function (params) {
