@@ -199,6 +199,7 @@ document.getElementById("file-upload").addEventListener("change", function (e) {
     SingletonFunction.callFunction(apiFunctionFactory.uploadFile, {
       file: files[0],
     });
+    Alpine.store("mainMenuStore").showInterface("");
   }
 });
 document
@@ -206,6 +207,7 @@ document
   .addEventListener("submit", function (event) {
     console.log("submit");
     event.preventDefault();
+    Alpine.store("mainMenuStore").showInterface("");
     apiFunctionFactory.analyzePDF("new-section");
   });
 

@@ -37,11 +37,10 @@
                 >
                 <div
                   id="project-title"
-                  class="inline-flex"
+                  class="inline-flex text-center"
                   x-show="!$store.uploadStore.showForm"
                 >
-                  <p class="text-sm leading-6 text-white">
-                    Project:
+                  <p class="text-sm leading-6 mx-4 text-white">
                     <span
                       class="font-semibold"
                       x-text="$store.uploadStore.title"
@@ -320,6 +319,30 @@
                   enctype="multipart/form-data"
                 >
                   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div class="close-container flex justify-end right-0 mb-2">
+                      <a
+                        x-data="mainMenuData()"
+                        x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === '' }"
+                        @click="$store.mainMenuStore.showInterface('')"
+                        href="#"
+                        class="close text-gray-400 hover:text-white group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="w-6 h-6"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </a>
+                    </div>
                     <div class="items-center justify-between">
                       <div class="items-center">
                         <div>
@@ -382,34 +405,68 @@
                 </form>
               </div>
               <!-- upload form -->
+              <!-- new section form -->
               <div
                 class="editor-toolbar items-center bg-gray-900"
                 x-data
                 x-show="$store.mainMenuStore.state === 'newSection'"
                 id="editor-toolbar-prompt"
               >
-                <form id="new-section" method="post">
-                  <div>
-                    <label
-                      for="Title"
-                      class="block text-sm font-medium leading-6 text-gray-900 sr-only"
-                      >section title</label
+                <div class="close-container flex justify-end right-0 mb-2">
+                  <a
+                    x-data="mainMenuData()"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === '' }"
+                    @click="$store.mainMenuStore.showInterface('')"
+                    href="#"
+                    class="close text-gray-400 hover:text-white group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
                     >
-                    <div class="py-2 p-8">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </a>
+                </div>
+                <form id="new-section" method="post">
+                  <div class="isolate -space-y-px rounded-md shadow-sm mb-4">
+                    <div
+                      class="relative rounded-md rounded-b-none px-3 pb-1.5 pt-2.5 ring-1 ring-inset ring-gray-300 focus-within:z-10 focus-within:ring-2 focus-within:ring-indigo-600"
+                    >
+                      <label
+                        for="section-title"
+                        class="block text-xs font-medium text-gray-200"
+                        >Section title</label
+                      >
                       <input
                         type="section-title"
                         name="section-title"
                         id="section-title"
-                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm p-2"
+                        class="block w-full border-0 p-0 text-gray-200 placeholder:text-gray-400 focus:ring-0 bg-gray-900 text-sm sm:leading-6"
                         placeholder="Section title"
                       />
                     </div>
-                    <div class="py-2 p-8">
+                    <div
+                      class="relative rounded-md rounded-t-none px-3 pb-1.5 pt-2.5 ring-1 ring-inset ring-gray-300 focus-within:z-10 focus-within:ring-2 focus-within:ring-indigo-600"
+                    >
+                      <label
+                        for="section-prompt"
+                        class="block text-xs font-medium text-gray-200"
+                        >Prompt</label
+                      >
                       <input
                         type="section-prompt"
                         name="section-prompt"
                         id="section-prompt"
-                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm p-2"
+                        class="block w-full border-0 p-0 text-gray-200 placeholder:text-gray-400 focus:ring-0 bg-gray-900 text-sm sm:leading-6"
                         placeholder="Section prompt"
                       />
                     </div>
@@ -421,9 +478,9 @@
           </div>
         </div>
       </nav>
-
+      <!-- new section form -->
+      <!-- Main container -->
       <main>
-        <!-- Main container -->
         <div id="top-container" class="text-white">
           <!-- content space -->
           <div class="container-isolator flex">
