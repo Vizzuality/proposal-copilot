@@ -77,8 +77,10 @@
                 <li>
                   <!-- Current: "bg-gray-800 text-white", Default: "text-gray-400 hover:text-white hover:bg-gray-800" -->
                   <a
-                    x-bind:class="{ 'opacity-50': $store.menuStore.state === 'state1' }"
-                    @click="$store.menuStore.showInterface('interface1')"
+                    x-data="mainMenuData()"
+                    @click.prevent="newDocument"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state1' }"
+                    @click="$store.mainMenuStore.showInterface('interface1')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -105,8 +107,9 @@
 
                 <li>
                   <a
-                    x-bind:class="{ 'opacity-50': $store.menuStore.state === 'state2' }"
-                    @click="$store.menuStore.showInterface('interface2')"
+                    @click.prevent="openDocument"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state2' }"
+                    @click="$store.mainMenuStore.showInterface('interface2')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -131,8 +134,8 @@
                 </li>
                 <li>
                   <a
-                    x-bind:class="{ 'opacity-50': $store.menuStore.state === 'uploadForm' }"
-                    @click="$store.menuStore.showInterface('uploadForm')"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'uploadForm' }"
+                    @click="$store.mainMenuStore.showInterface('uploadForm')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -158,8 +161,11 @@
                 </li>
                 <li>
                   <a
-                    x-bind:class="{ 'opacity-50': $store.menuStore.state === 'state4' }"
-                    @click="$store.menuStore.showInterface('interface4')"
+                    x-data="mainMenuData()"
+                    x-on:click.once.prevent="analyzeDocument"
+                    id="analyzeButton"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state4' }"
+                    @click="$store.mainMenuStore.showInterface('interface4')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -185,8 +191,8 @@
                 </li>
                 <li>
                   <a
-                    x-bind:class="{ 'opacity-50': $store.menuStore.state === 'newSection' }"
-                    @click="$store.menuStore.showInterface('newSection')"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'newSection' }"
+                    @click="$store.mainMenuStore.showInterface('newSection')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -213,8 +219,8 @@
 
                 <li>
                   <a
-                    x-bind:class="{ 'opacity-50': $store.menuStore.state === 'state6' }"
-                    @click="$store.menuStore.showInterface('interface6')"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state6' }"
+                    @click="$store.mainMenuStore.showInterface('interface6')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -240,8 +246,8 @@
                 </li>
                 <li>
                   <a
-                    x-bind:class="{ 'opacity-50': $store.menuStore.state === 'state7' }"
-                    @click="$store.menuStore.showInterface('interface7')"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state7' }"
+                    @click="$store.mainMenuStore.showInterface('interface7')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -267,8 +273,8 @@
                 </li>
                 <li>
                   <a
-                    x-bind:class="{ 'opacity-50': $store.menuStore.state === 'state8' }"
-                    @click="$store.menuStore.showInterface('interface8')"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state8' }"
+                    @click="$store.mainMenuStore.showInterface('interface8')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -298,8 +304,85 @@
                   </a>
                 </li>
               </ul>
+              <!-- Upload form -->
               <div
-                class="editor-toolbar items-center bg-gray-900 hidden"
+                id="upload-form-div"
+                x-data
+                x-show="$store.mainMenuStore.state === 'uploadForm'"
+                class="bg-gray-900 text-white"
+              >
+                <form
+                  id="upload-form"
+                  method="post"
+                  enctype="multipart/form-data"
+                >
+                  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div class="items-center justify-between">
+                      <div class="items-center">
+                        <div>
+                          <div class="col-span-full">
+                            <label
+                              for="file-upload"
+                              class="block text-sm font-medium leading-6 text-white text-center py-2"
+                              >Base document or RFP</label
+                            >
+                            <div
+                              class="mt-2 flex justify-center rounded-lg border border-dashed border-white/25 px-6 py-10"
+                            >
+                              <div class="text-center">
+                                <svg
+                                  class="mx-auto h-12 w-12 text-gray-500"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                  stroke-width="1.5"
+                                  fill="none"
+                                  aria-hidden="true"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                                  ></path>
+                                </svg>
+
+                                <div
+                                  class="mt-4 flex text-sm leading-6 text-gray-400"
+                                >
+                                  <label
+                                    for="file-upload"
+                                    class="relative cursor-pointer rounded-md bg-gray-900 font-semibold text-white focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 focus-within:ring-offset-gray-900 hover:text-indigo-500"
+                                  >
+                                    <span class="p-2">Upload a file</span>
+                                    <input
+                                      id="file-upload"
+                                      name="file-upload"
+                                      type="file"
+                                      class="sr-only"
+                                    />
+                                  </label>
+                                  <p class="pl-1">or drag and drop</p>
+                                </div>
+                                <p class="text-xs leading-5 text-gray-400">
+                                  PDF up to 50MB
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            id="upload-response"
+                            class="text-white py-5"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!-- upload form -->
+              <div
+                class="editor-toolbar items-center bg-gray-900"
+                x-data
+                x-show="$store.mainMenuStore.state === 'newSection'"
                 id="editor-toolbar-prompt"
               >
                 <form id="new-section" method="post">
@@ -337,77 +420,9 @@
       </nav>
 
       <main>
-        <!-- Top container -->
+        <!-- Main container -->
         <div id="top-container" class="text-white">
-          <!-- Upload form -->
-          <div
-            id="upload-form-div"
-            x-show="$store.uploadStore.showForm"
-            class="bg-gray-900"
-          >
-            <form id="upload-form" method="post" enctype="multipart/form-data">
-              <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="items-center justify-between">
-                  <div class="items-center">
-                    <div>
-                      <div class="col-span-full">
-                        <label
-                          for="file-upload"
-                          class="block text-sm font-medium leading-6 text-white text-center py-2"
-                          >Base document or RFP</label
-                        >
-                        <div
-                          class="mt-2 flex justify-center rounded-lg border border-dashed border-white/25 px-6 py-10"
-                        >
-                          <div class="text-center">
-                            <svg
-                              class="mx-auto h-12 w-12 text-gray-500"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              stroke-width="1.5"
-                              fill="none"
-                              aria-hidden="true"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                              ></path>
-                            </svg>
-
-                            <div
-                              class="mt-4 flex text-sm leading-6 text-gray-400"
-                            >
-                              <label
-                                for="file-upload"
-                                class="relative cursor-pointer rounded-md bg-gray-900 font-semibold text-white focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 focus-within:ring-offset-gray-900 hover:text-indigo-500"
-                              >
-                                <span class="p-2">Upload a file</span>
-                                <input
-                                  id="file-upload"
-                                  name="file-upload"
-                                  type="file"
-                                  class="sr-only"
-                                />
-                              </label>
-                              <p class="pl-1">or drag and drop</p>
-                            </div>
-                            <p class="text-xs leading-5 text-gray-400">
-                              PDF up to 50MB
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div id="upload-response" class="text-white py-5"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-          <!-- upload form -->
           <!-- content space -->
-
           <div class="container-isolator flex">
             <div class="editor bg-white flex-grow">
               <div

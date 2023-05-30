@@ -8,6 +8,7 @@ from langchain.llms import OpenAI
 import asyncio
 
 analyze_pdf = Blueprint("analyze_pdf", __name__)
+
 embeddings = OpenAIEmbeddings()
 new_vectorstore = FAISS.load_local("faiss_index_react", embeddings)
 qa = RetrievalQA.from_chain_type(
@@ -18,6 +19,44 @@ qa = RetrievalQA.from_chain_type(
 @analyze_pdf.route("/analyze-pdf", methods=["POST"])
 def analyze_pdf_function():
     output_dict = {}
+    prompts = [
+        {
+            "title": "Engagement Objective",
+            "prompt": "what is The primary objective of this engagement",
+        },
+        {
+            "title": "Promotion & Stakeholders",
+            "prompt": "Who is promoting this engagement and stakeholders",
+        },
+        {
+            "title": "Reason",
+            "prompt": "why this is needed",
+        },
+        {
+            "title": "Timeline",
+            "prompt": "when this is needed",
+        },
+        {
+            "title": "Todo List",
+            "prompt": "Give me the whole list of things to do",
+        },
+        {
+            "title": "Technical Requirements",
+            "prompt": "List any possible technical requirement",
+        },
+        {
+            "title": "Risks & Caveats",
+            "prompt": "List any possible risk or caveat",
+        },
+        {
+            "title": "Initial Platform Status",
+            "prompt": "Describe if there is current status of the platform, if there was something developed before, also posssible technologies used",
+        },
+        {
+            "title": "Special Conditions",
+            "prompt": "Describe if there is any risk or special condition",
+        },
+    ]
 
     if request.form.get("analysis-type") == "new-section":
         prompts = [
@@ -32,45 +71,12 @@ def analyze_pdf_function():
         prompts = [
             {"title": "elaboratedSection", "prompt": prompt},
         ]
-    else:
-        prompts = [
-            {
-                "title": "Engagement Objective",
-                "prompt": "what is The primary objective of this engagement",
-            },
-            {
-                "title": "Promotion & Stakeholders",
-                "prompt": "Who is promoting this engagement and stakeholders",
-            },
-            {
-                "title": "Reason",
-                "prompt": "why this is needed",
-            },
-            {
-                "title": "Timeline",
-                "prompt": "when this is needed",
-            },
-            {
-                "title": "Todo List",
-                "prompt": "Give me the whole list of things to do",
-            },
-            {
-                "title": "Technical Requirements",
-                "prompt": "List any possible technical requirement",
-            },
-            {
-                "title": "Risks & Caveats",
-                "prompt": "List any possible risk or caveat",
-            },
-            {
-                "title": "Initial Platform Status",
-                "prompt": "Describe if there is current status of the platform, if there was something developed before, also posssible technologies used",
-            },
-            {
-                "title": "Special Conditions",
-                "prompt": "Describe if there is any risk or special condition",
-            },
-        ]
+    elif (
+        request.form.get("analysis-type") == "initial-analysis"
+        and "iteration" in request.form
+    ):
+        iteration_index = int(request.form.get("iteration"))
+        prompts = [prompts[iteration_index]]
 
     for prompt in prompts:
         # asyncio.run creates a new event loop and runs the coroutine until it's done

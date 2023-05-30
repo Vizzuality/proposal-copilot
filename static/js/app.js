@@ -1,9 +1,77 @@
 import Alpine from "alpinejs";
 import { Ripple, initTE } from "tw-elements";
+
+const analysisIterations = 8;
+
 Alpine.store("uploadStore", {
   showForm: false,
   title: "",
 });
+
+Alpine.store("mainMenuStore", {
+  state: "initial",
+  activeInterface: "",
+  showInterface(interfaceName) {
+    if (this.activeInterface !== interfaceName) {
+      this.activeInterface = interfaceName;
+      switch (interfaceName) {
+        case "interface1":
+          this.state = "state1";
+          break;
+        case "interface2":
+          this.state = "state2";
+          break;
+        case "uploadForm":
+          this.state = "uploadForm";
+          break;
+        case "interface4":
+          this.state = "state4";
+          break;
+        case "newSection":
+          this.state = "newSection";
+          break;
+        case "interface6":
+          this.state = "state6";
+          break;
+        case "interface7":
+          this.state = "state7";
+          break;
+        case "interface8":
+          this.state = "state8";
+          break;
+        default:
+          this.state = "initial";
+      }
+    }
+  },
+});
+
+Alpine.data("mainMenuData", () => ({
+  tempFormData: null,
+  docAnalyzed: false,
+  analyzeDocument() {
+    console.log("clicked");
+    if (this.docAnalyzed == false) {
+      for (let i = 0; i <= analysisIterations; i++) {
+        setTimeout(() => {
+          console.log("analyzing");
+
+          this.tempFormData = new FormData();
+          this.tempFormData.append("analysis-type", "initial-analysis");
+          this.tempFormData.append("iteration", i);
+
+          apiFunctionFactory.analyzePDF(null, this.tempFormData);
+          if (i == analysisIterations) {
+            this.docAnalyzed = true;
+          }
+        }, 1000 * i); // wait i seconds before executing
+      }
+    }
+  },
+  newDocument() {
+    console.log("new file");
+  },
+}));
 
 // Singleton function
 const SingletonFunction = (() => {
@@ -17,42 +85,6 @@ const SingletonFunction = (() => {
     callFunction: callFunction,
   };
 })();
-
-Alpine.store("menuStore", {
-  state: "initial",
-  activeInterface: "",
-  showInterface(interfaceName) {
-    this.activeInterface = interfaceName;
-    switch (interfaceName) {
-      case "interface1":
-        this.state = "state1";
-        break;
-      case "interface2":
-        this.state = "state2";
-        break;
-      case "uploadForm":
-        this.state = "uploadForm";
-        break;
-      case "interface4":
-        this.state = "state4";
-        break;
-      case "newSection":
-        this.state = "newSection";
-        break;
-      case "interface6":
-        this.state = "state6";
-        break;
-      case "interface7":
-        this.state = "state7";
-        break;
-      case "interface8":
-        this.state = "state8";
-        break;
-      default:
-        this.state = "initial";
-    }
-  },
-});
 
 // Factory for API call functions
 const apiFunctionFactory = {
