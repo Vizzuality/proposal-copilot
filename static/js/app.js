@@ -49,6 +49,21 @@ Alpine.store("mainMenuStore", {
 Alpine.data("mainMenuData", () => ({
   tempFormData: null,
   docAnalyzed: false,
+  openDocument() {
+    console.log("open document");
+  },
+  copyToClipboard() {
+    console.log("copy to clipboard");
+    var textToCopy = document.getElementById("editor-content").innerText;
+    navigator.clipboard.writeText(textToCopy).then(
+      function () {
+        console.log("Copying to clipboard was successful!");
+      },
+      function (err) {
+        console.error("Could not copy text: ", err);
+      }
+    );
+  },
   analyzeDocument() {
     console.log("clicked");
     if (this.docAnalyzed == false) {

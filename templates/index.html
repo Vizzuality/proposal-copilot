@@ -107,6 +107,7 @@
 
                 <li>
                   <a
+                    x-data="mainMenuData()"
                     @click.prevent="openDocument"
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state2' }"
                     @click="$store.mainMenuStore.showInterface('interface2')"
@@ -219,6 +220,8 @@
 
                 <li>
                   <a
+                    x-data="mainMenuData()"
+                    @click.prevent="copyToClipboard"
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state6' }"
                     @click="$store.mainMenuStore.showInterface('interface6')"
                     href="#"
