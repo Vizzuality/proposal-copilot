@@ -8,3 +8,4 @@ tiktoken
 asyncio
 futures
 werkzeug
+pinecone-client

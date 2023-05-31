@@ -1,6 +1,8 @@
 # app
 docs
-faiss_index_react
+vector_indexes
+proposal_index.pdf
+*.ipynb
 # common
 .DS_Store
 .env
