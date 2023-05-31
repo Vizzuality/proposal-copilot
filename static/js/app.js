@@ -6,11 +6,28 @@ const analysisIterations = 8;
 Alpine.store("uploadStore", {
   showForm: false,
   title: "",
+  indexName: "",
 });
+
+const loader = {
+  show: function () {
+    Alpine.store("mainMenuStore").isLoading = true;
+  },
+  hide: function () {
+    Alpine.store("mainMenuStore").isLoading = false;
+    console.log("hiding loader");
+  },
+};
+
+const hideInterface = function () {
+  Alpine.store("mainMenuStore").showInterface("");
+  console.log("hiding interface");
+};
 
 Alpine.store("mainMenuStore", {
   state: "initial",
   activeInterface: "",
+  isLoading: false,
   showInterface(interfaceName) {
     if (this.activeInterface !== interfaceName) {
       this.activeInterface = interfaceName;
@@ -57,7 +74,7 @@ Alpine.data("mainMenuData", () => ({
     var textToCopy = document.getElementById("editor-content").innerText;
     navigator.clipboard.writeText(textToCopy).then(
       function () {
-        console.log("Copying to clipboard was successful!");
+        console.log("Text copied.");
       },
       function (err) {
         console.error("Could not copy text: ", err);
@@ -66,6 +83,12 @@ Alpine.data("mainMenuData", () => ({
   },
   analyzeDocument() {
     console.log("clicked");
+    loader.show();
+    if (Alpine.store("uploadStore").indexName === "") {
+      console.log("Empty index");
+      loader.hide();
+      return;
+    }
     if (this.docAnalyzed == false) {
       for (let i = 0; i <= analysisIterations; i++) {
         setTimeout(() => {
@@ -118,11 +141,12 @@ const apiFunctionFactory = {
           document.getElementById("upload-response").innerText = data["error"];
         } else {
           console.log(data["response"]);
-          Alpine.store("uploadStore").showForm = false;
-          console.log(Alpine.store("uploadStore").showForm);
           Alpine.store("uploadStore").title = data["response"];
-          console.log(Alpine.store("uploadStore").title);
+          Alpine.store("uploadStore").indexName = data["vector_index"];
+          console.log(data);
+          hideInterface();
         }
+        loader.hide();
         return data;
       })
       .catch((error) => {
@@ -130,7 +154,15 @@ const apiFunctionFactory = {
       });
   },
   analyzePDF: function (formId = null, formData = null) {
+    if (Alpine.store("uploadStore").indexName === "") {
+      console.log("Empty index");
+      loader.hide();
+      return;
+    }
+    console.log("index:");
+    console.log(Alpine.store("uploadStore").indexName);
     const url = "/analyze-pdf";
+    loader.show();
     if (formId && document.getElementById(formId)) {
       const form = document.getElementById(formId);
       formData = new FormData(form);
@@ -139,6 +171,7 @@ const apiFunctionFactory = {
       formData = new FormData(); // create a new empty FormData object if no formId and no formData provided
       console.log("I'm deleting your data");
     }
+    formData.append("index-name", Alpine.store("uploadStore").indexName);
     return fetch(url, {
       method: "POST",
       body: formData,
@@ -184,6 +217,7 @@ document
 document.getElementById("upload-form").addEventListener("drop", function (e) {
   e.preventDefault();
   e.stopPropagation();
+  loader.show();
   const files = e.dataTransfer.files;
   if (files.length > 0) {
     SingletonFunction.callFunction(apiFunctionFactory.uploadFile, {
@@ -194,12 +228,13 @@ document.getElementById("upload-form").addEventListener("drop", function (e) {
 
 document.getElementById("file-upload").addEventListener("change", function (e) {
   e.preventDefault();
+  loader.show();
   const files = e.target.files;
   if (files.length > 0) {
     SingletonFunction.callFunction(apiFunctionFactory.uploadFile, {
       file: files[0],
     });
-    Alpine.store("mainMenuStore").showInterface("");
+    loader.show();
   }
 });
 document
@@ -207,7 +242,7 @@ document
   .addEventListener("submit", function (event) {
     console.log("submit");
     event.preventDefault();
-    Alpine.store("mainMenuStore").showInterface("");
+    hideInterface();
     apiFunctionFactory.analyzePDF("new-section");
   });
 
@@ -276,6 +311,7 @@ function parseResponseAndAppendToDOM(data) {
 
     editorContent.appendChild(sectionContainer);
   }
+  loader.hide();
 }
 
 function editContentInDOM(data) {
@@ -304,6 +340,7 @@ function editContentInDOM(data) {
       }
     }
   }
+  loader.hide();
 }
 const tooltipTriggerList = [].slice.call(
   document.querySelectorAll('[data-te-toggle="tooltip"]')

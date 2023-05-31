@@ -1,14 +1,16 @@
-from flask import Blueprint, request, jsonify
-from werkzeug.utils import secure_filename
 import os
-from config import upload_folder as upload_folder
+import uuid
 
-from langchain.document_loaders import PyPDFLoader
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
+from flask import Blueprint, jsonify, request
 from langchain.chains import RetrievalQA
+from langchain.document_loaders import PyPDFLoader
+from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.llms import OpenAI
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.vectorstores import FAISS
+from werkzeug.utils import secure_filename
+
+from config import upload_folder as upload_folder
 
 pdf_uploader = Blueprint("pdf_uploader", __name__)
 
@@ -41,16 +43,24 @@ async def pdf_upload():
         )
         docs = text_splitter.split_documents(documents=documents)
         embeddings = OpenAIEmbeddings()
-
+        uid = uuid.uuid4()
+        index_name = f"faiss_index_react_{uid}"
         vectorstore = FAISS.from_documents(docs, embeddings)
-        vectorstore.save_local("faiss_index_react")
+        vectorstore.save_local(index_name)
 
-        new_vectorstore = FAISS.load_local("faiss_index_react", embeddings)
+        new_vectorstore = FAISS.load_local(index_name, embeddings)
         qa = RetrievalQA.from_chain_type(
             llm=OpenAI(), chain_type="stuff", retriever=new_vectorstore.as_retriever()
         )
         response = qa.run("Search a short title for the project")
         print(response)
-        return jsonify(status="File successfully uploaded", response=response), 200
+        return (
+            jsonify(
+                status="File successfully uploaded",
+                response=response,
+                vector_index=index_name,
+            ),
+            200,
+        )
 
     return jsonify(error="File not allowed"), 400

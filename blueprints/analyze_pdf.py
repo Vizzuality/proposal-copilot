@@ -1,23 +1,21 @@
 from flask import Blueprint, request, jsonify
 import os
 
-from langchain.vectorstores import FAISS
-from langchain.chains import RetrievalQA
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.llms import OpenAI
+from blueprints.vectorstore_manager import VectorStoreManager
+
 import asyncio
 
 analyze_pdf = Blueprint("analyze_pdf", __name__)
 
-embeddings = OpenAIEmbeddings()
-new_vectorstore = FAISS.load_local("faiss_index_react", embeddings)
-qa = RetrievalQA.from_chain_type(
-    llm=OpenAI(), chain_type="stuff", retriever=new_vectorstore.as_retriever()
-)
+vectorstore_manager = VectorStoreManager()
 
 
 @analyze_pdf.route("/analyze-pdf", methods=["POST"])
 def analyze_pdf_function():
+    index_name = request.form.get("index-name")
+    print(index_name)
+    _, qa = vectorstore_manager.get_vectorstore(index_name)
+
     output_dict = {}
     prompts = [
         {
@@ -80,13 +78,13 @@ def analyze_pdf_function():
 
     for prompt in prompts:
         # asyncio.run creates a new event loop and runs the coroutine until it's done
-        prompt, result = asyncio.run(ask_pdf(prompt))
+        prompt, result = asyncio.run(ask_pdf(prompt, qa))  # pass qa to ask_pdf function
         output_dict[prompt] = result
     print(jsonify(output_dict))
     return jsonify(output_dict), 200
 
 
-async def ask_pdf(prompt_obj):
+async def ask_pdf(prompt_obj, qa):  # receive qa as an argument
     try:
         # Let's run the blocking function in a separate thread using asyncio.to_thread
         response = await asyncio.to_thread(qa.run, prompt_obj["prompt"])
