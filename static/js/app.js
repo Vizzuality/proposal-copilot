@@ -1,12 +1,15 @@
 import Alpine from "alpinejs";
 import { Ripple, initTE } from "tw-elements";
+import showdown from "showdown";
+const converter = new showdown.Converter();
 
 const analysisIterations = 8;
 
 Alpine.store("uploadStore", {
   showForm: false,
   title: "",
-  indexName: "",
+  indexName:
+    "vector_indexes/faiss_index_react_f16f6f22-65ab-4ef4-a064-acd624ebcf57",
 });
 
 const loader = {
@@ -161,7 +164,6 @@ const apiFunctionFactory = {
     }
     console.log("index:");
     console.log(Alpine.store("uploadStore").indexName);
-    const url = "/analyze-pdf";
     loader.show();
     if (formId && document.getElementById(formId)) {
       const form = document.getElementById(formId);
@@ -172,6 +174,26 @@ const apiFunctionFactory = {
       console.log("I'm deleting your data");
     }
     formData.append("index-name", Alpine.store("uploadStore").indexName);
+    let analysisType = formData.get("analysis-type");
+    let url = "";
+
+    switch (analysisType) {
+      case "initial-analysis":
+        url = "/analyze-pdf";
+        break;
+      case "new-section":
+        url = "/analyze-pdf";
+        break;
+      case "elaborate":
+        url = "/analyze-pdf";
+        break;
+      case "similarity":
+        url = "/similarity";
+        break;
+      default:
+        console.log("Invalid analysis type");
+    }
+
     return fetch(url, {
       method: "POST",
       body: formData,
@@ -182,8 +204,8 @@ const apiFunctionFactory = {
           document.getElementById("prompt-response").innerText = data["error"];
         } else {
           if (
-            formData.get("analysis-type") === "initial-analysis" ||
-            formData.get("analysis-type") === "new-section"
+            analysisType === "initial-analysis" ||
+            analysisType === "new-section"
           ) {
             parseResponseAndAppendToDOM(data);
             console.log("new section");
@@ -253,16 +275,27 @@ document.addEventListener("alpine:init", () => {
       console.log("elaborate button clicked");
       const buttonData = getButtonData(event.target);
       const formData = new FormData();
+      console.log(buttonData.textContent);
       formData.append("section-prompt", buttonData.textContent);
       formData.append("section-title", buttonData.sectionName);
       formData.append("container-div", buttonData.containerDivId);
       formData.append("analysis-type", "elaborate");
+      apiFunctionFactory.analyzePDF(null, formData);
+    },
+    similarity(event) {
+      event.preventDefault();
+      console.log("similarity button clicked");
+      const buttonData = getButtonData(event.target);
+      const formData = new FormData();
+      formData.append("section-prompt", buttonData.textContent);
+      formData.append("section-title", buttonData.sectionName);
+      formData.append("container-div", buttonData.containerDivId);
+      formData.append("analysis-type", "similarity");
       for (var pair of formData.entries()) {
         console.log(pair[0] + ", " + pair[1]);
       }
       apiFunctionFactory.analyzePDF(null, formData);
     },
-    // Other handlers here
   }));
 });
 
@@ -298,16 +331,19 @@ function parseResponseAndAppendToDOM(data) {
     sectionContainer.id = "section-container-" + key.replace(/ /g, "-");
 
     const sectionDiv = sectionContainer.querySelector("#proposal-section");
+    console.log("sectionDiv");
+    console.log(sectionDiv);
+
     sectionDiv.removeAttribute("id");
     sectionDiv.id = "section-div-" + key.replace(/ /g, "-");
 
     const h3 = document.createElement("h3");
     h3.textContent = key;
-    sectionDiv.appendChild(h3);
 
-    const p = document.createElement("p");
-    p.textContent = data[key]["response"];
-    sectionDiv.appendChild(p);
+    const markdownText = data[key]["response"];
+    const htmlText = converter.makeHtml(markdownText);
+
+    sectionDiv.innerHTML = h3.outerHTML + htmlText;
 
     editorContent.appendChild(sectionContainer);
   }
@@ -331,20 +367,30 @@ function editContentInDOM(data) {
   console.log(sectionDiv);
 
   for (const key in data) {
-    // Exclude 'container-div' from iteration
     if (key !== "container-div") {
-      // Replace the p content
-      const p = sectionDiv.getElementsByTagName("p")[0];
-      if (p) {
-        p.textContent = data[key]["response"]; // assuming the response is the new content for p
+      // Parse markdown to HTML
+      const markdownText = data[key]["response"];
+      const htmlText = converter.makeHtml(markdownText);
+      console.log("markdownText");
+      console.log(markdownText);
+      console.log("htmlText");
+      console.log(htmlText);
+
+      // Create a temporary div to hold the HTML
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = htmlText;
+      console.log("tempDiv.firstChild");
+      console.log(tempDiv.firstChild);
+
+      // Append all elements from the temporary div to the sectionDiv
+      while (tempDiv.firstChild) {
+        console.log("appending");
+        sectionDiv.appendChild(tempDiv.firstChild);
       }
     }
   }
   loader.hide();
 }
-const tooltipTriggerList = [].slice.call(
-  document.querySelectorAll('[data-te-toggle="tooltip"]')
-);
 
 initTE({ Ripple });
 Alpine.start();

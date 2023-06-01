@@ -561,7 +561,8 @@
             <a
               href="#"
               x-data="buttonHandlers()"
-              class="solve text-gray-400 hover:text-gray-900 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
+              x-on:click.prevent="similarity($event)"
+              class="similarity text-gray-400 hover:text-gray-900 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

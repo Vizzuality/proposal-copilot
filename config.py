@@ -9,3 +9,5 @@ os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = os.getenv(
 )
 secret_key = os.getenv("SECRET_KEY")
 upload_folder = os.getenv("UPLOAD_FOLDER")
+pinecone_api_key = os.getenv("PINECONE_API_KEY")
+pinecone_env = os.getenv("PINECONE_ENV")
