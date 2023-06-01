@@ -176,6 +176,7 @@ const apiFunctionFactory = {
     formData.append("index-name", Alpine.store("uploadStore").indexName);
     let analysisType = formData.get("analysis-type");
     let url = "";
+    let actionTitle = "";
 
     switch (analysisType) {
       case "initial-analysis":
@@ -186,9 +187,11 @@ const apiFunctionFactory = {
         break;
       case "elaborate":
         url = "/analyze-pdf";
+        actionTitle = "Elaborated text";
         break;
       case "similarity":
         url = "/similarity";
+        actionTitle = "From previous proposals";
         break;
       default:
         console.log("Invalid analysis type");
@@ -211,6 +214,7 @@ const apiFunctionFactory = {
             console.log("new section");
           } else {
             data["container-div"] = formData.get("container-div");
+            data["action-title"] = actionTitle;
             editContentInDOM(data);
             console.log("edit section");
           }
@@ -366,26 +370,38 @@ function editContentInDOM(data) {
   console.log("sectionDiv");
   console.log(sectionDiv);
 
+  const h4 = document.createElement("h4");
+  h4.textContent = data["action-title"];
+  sectionDiv.appendChild(h4);
+  console.log("textContent");
+
   for (const key in data) {
     if (key !== "container-div") {
-      // Parse markdown to HTML
-      const markdownText = data[key]["response"];
-      const htmlText = converter.makeHtml(markdownText);
-      console.log("markdownText");
-      console.log(markdownText);
-      console.log("htmlText");
-      console.log(htmlText);
+      if (
+        typeof data[key] === "object" &&
+        data[key].hasOwnProperty("response")
+      ) {
+        // Parse markdown to HTML
+        const markdownText = data[key]["response"];
+        const htmlText = converter.makeHtml(markdownText);
+        console.log("markdownText");
+        console.log(markdownText);
+        console.log("htmlText");
+        console.log(htmlText);
 
-      // Create a temporary div to hold the HTML
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = htmlText;
-      console.log("tempDiv.firstChild");
-      console.log(tempDiv.firstChild);
+        // Create a temporary div to hold the HTML
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = htmlText;
+        console.log("tempDiv.firstChild");
+        console.log(tempDiv.firstChild);
 
-      // Append all elements from the temporary div to the sectionDiv
-      while (tempDiv.firstChild) {
-        console.log("appending");
-        sectionDiv.appendChild(tempDiv.firstChild);
+        // Append all elements from the temporary div to the sectionDiv
+        while (tempDiv.firstChild) {
+          console.log("appending");
+          if (tempDiv.firstChild) {
+            sectionDiv.appendChild(tempDiv.firstChild);
+          }
+        }
       }
     }
   }
