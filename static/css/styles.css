@@ -1953,6 +1953,10 @@ select {
 .border-white\/25 {
   border-color: rgb(255 255 255 / 0.25);
 }
+.border-pink-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(244 114 182 / var(--tw-border-opacity));
+}
 .\!bg-\[\#858585\] {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(133 133 133 / var(--tw-bg-opacity)) !important;
@@ -2408,6 +2412,10 @@ select {
   --tw-text-opacity: 1;
   color: rgb(17 24 39 / var(--tw-text-opacity));
 }
+.text-pink-400 {
+  --tw-text-opacity: 1;
+  color: rgb(244 114 182 / var(--tw-text-opacity));
+}
 .underline {
   text-decoration-line: underline;
 }
@@ -2693,6 +2701,26 @@ select {
   color: rgb(156 163 175 / var(--tw-text-opacity));
 }
 
+.placeholder\:text-white::-moz-placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.placeholder\:text-white::placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.placeholder\:text-gray-200::-moz-placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(229 231 235 / var(--tw-text-opacity));
+}
+
+.placeholder\:text-gray-200::placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(229 231 235 / var(--tw-text-opacity));
+}
+
 .before\:pointer-events-none::before {
   content: var(--tw-content);
   pointer-events: none;
@@ -2848,6 +2876,26 @@ select {
   --tw-ring-color: rgb(79 70 229 / var(--tw-ring-opacity));
 }
 
+.focus-within\:ring-pink-500:focus-within {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(236 72 153 / var(--tw-ring-opacity));
+}
+
+.focus-within\:ring-pink-600:focus-within {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(219 39 119 / var(--tw-ring-opacity));
+}
+
+.focus-within\:ring-purple-600:focus-within {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(147 51 234 / var(--tw-ring-opacity));
+}
+
+.focus-within\:ring-pink-400:focus-within {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(244 114 182 / var(--tw-ring-opacity));
+}
+
 .focus-within\:ring-offset-2:focus-within {
   --tw-ring-offset-width: 2px;
 }
@@ -2927,6 +2975,11 @@ select {
 .hover\:text-white:hover {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.hover\:text-pink-400:hover {
+  --tw-text-opacity: 1;
+  color: rgb(244 114 182 / var(--tw-text-opacity));
 }
 
 .hover\:\!opacity-90:hover {

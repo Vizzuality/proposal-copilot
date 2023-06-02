@@ -325,7 +325,7 @@
                         x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === '' }"
                         @click="$store.mainMenuStore.showInterface('')"
                         href="#"
-                        class="close text-gray-400 hover:text-white group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
+                        class="close text-white hover:text-pink-400 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -353,7 +353,7 @@
                               >Base document or RFP</label
                             >
                             <div
-                              class="mt-2 flex justify-center rounded-lg border border-dashed border-white/25 px-6 py-10"
+                              class="mt-2 flex justify-center rounded-lg border border-dashed border-pink-400 px-6 py-10"
                             >
                               <div class="text-center">
                                 <svg
@@ -376,7 +376,7 @@
                                 >
                                   <label
                                     for="file-upload"
-                                    class="relative cursor-pointer rounded-md bg-gray-900 font-semibold text-white focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 focus-within:ring-offset-gray-900 hover:text-indigo-500"
+                                    class="relative cursor-pointer rounded-md bg-gray-900 font-semibold text-white focus-within:outline-none focus-within:ring-2 focus-within:ring-pink-400 focus-within:ring-offset-2 focus-within:ring-offset-gray-900 hover:text-pink-400"
                                   >
                                     <span class="p-2">Upload a file</span>
                                     <input
@@ -418,7 +418,7 @@
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === '' }"
                     @click="$store.mainMenuStore.showInterface('')"
                     href="#"
-                    class="close text-gray-400 hover:text-white group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
+                    class="close text-white hover:text-pink-400 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -439,34 +439,34 @@
                 <form id="new-section" method="post">
                   <div class="isolate -space-y-px rounded-md shadow-sm mb-4">
                     <div
-                      class="relative rounded-md rounded-b-none px-3 pb-1.5 pt-2.5 ring-1 ring-inset ring-gray-300 focus-within:z-10 focus-within:ring-2 focus-within:ring-indigo-600"
+                      class="relative rounded-md rounded-b-none px-3 pb-1.5 pt-2.5 ring-1 ring-inset ring-gray-300 focus-within:z-10 focus-within:ring-2 focus-within:ring-pink-400"
                     >
                       <label
                         for="section-title"
-                        class="block text-xs font-medium text-gray-200"
+                        class="block text-xs font-medium text-white"
                         >Section title</label
                       >
                       <input
-                        type="section-title"
+                        type="text"
                         name="section-title"
                         id="section-title"
-                        class="block w-full border-0 p-0 text-gray-200 placeholder:text-gray-400 focus:ring-0 bg-gray-900 text-sm sm:leading-6"
+                        class="block w-full border-0 p-0 text-gray-200 placeholder:text-gray-200 focus:ring-0 bg-gray-900 text-sm sm:leading-6"
                         placeholder="Section title"
                       />
                     </div>
                     <div
-                      class="relative rounded-md rounded-t-none px-3 pb-1.5 pt-2.5 ring-1 ring-inset ring-gray-300 focus-within:z-10 focus-within:ring-2 focus-within:ring-indigo-600"
+                      class="relative rounded-md rounded-t-none px-3 pb-1.5 pt-2.5 ring-1 ring-inset ring-gray-300 focus-within:z-10 focus-within:ring-2 focus-within:ring-pink-400"
                     >
                       <label
                         for="section-prompt"
-                        class="block text-xs font-medium text-gray-200"
+                        class="block text-xs font-medium text-white"
                         >Prompt</label
                       >
                       <input
-                        type="section-prompt"
+                        type="text"
                         name="section-prompt"
                         id="section-prompt"
-                        class="block w-full border-0 p-0 text-gray-200 placeholder:text-gray-400 focus:ring-0 bg-gray-900 text-sm sm:leading-6"
+                        class="block w-full border-0 p-0 text-gray-200 placeholder:text-gray-200 focus:ring-0 bg-gray-900 text-sm sm:leading-6"
                         placeholder="Section prompt"
                       />
                     </div>
@@ -539,7 +539,9 @@
               href="#"
               x-data="buttonHandlers()"
               class="elaborate text-gray-400 hover:text-gray-900 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
-              x-on:click.prevent="elaborate($event)"
+              x-on:click.prevent="edit($event)"
+              data-te-toggle="tooltip"
+              title="Edit"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -552,7 +554,32 @@
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6"
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              x-data="buttonHandlers()"
+              class="elaborate text-gray-400 hover:text-gray-900 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
+              x-on:click.prevent="elaborate($event)"
+              data-te-toggle="tooltip"
+              title="Expand this info"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
                 />
               </svg>
             </a>
@@ -563,6 +590,8 @@
               x-data="buttonHandlers()"
               x-on:click.prevent="similarity($event)"
               class="similarity text-gray-400 hover:text-gray-900 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
+              data-te-toggle="tooltip"
+              title="Find similar proposals"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -585,6 +614,9 @@
               href="#"
               x-data="buttonHandlers()"
               class="research text-gray-400 hover:text-gray-900 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
+              x-on:click.prevent="ask($event)"
+              data-te-toggle="tooltip"
+              title="Ask GPT"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -607,6 +639,36 @@
               href="#"
               x-data="buttonHandlers()"
               class="close text-gray-400 hover:text-gray-900 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
+              data-te-toggle="tooltip"
+              x-on:click.prevent="solve($event)"
+              data-te-toggle="tooltip"
+              title="Solve a difficult problem"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
+                />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              x-data="buttonHandlers()"
+              class="close text-gray-400 hover:text-gray-900 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
+              data-te-toggle="tooltip"
+              x-on:click.prevent="remove($event)"
+              data-te-toggle="tooltip"
+              title="Remove section"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

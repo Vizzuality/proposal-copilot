@@ -270,6 +270,8 @@ document
     event.preventDefault();
     hideInterface();
     apiFunctionFactory.analyzePDF("new-section");
+    document.getElementById("section-title").value = "";
+    document.getElementById("section-prompt").value = "";
   });
 
 document.addEventListener("alpine:init", () => {
@@ -299,6 +301,14 @@ document.addEventListener("alpine:init", () => {
         console.log(pair[0] + ", " + pair[1]);
       }
       apiFunctionFactory.analyzePDF(null, formData);
+    },
+    remove(event) {
+      event.preventDefault();
+      console.log("remove button clicked");
+      const buttonData = getButtonData(event.target);
+      const el = document.getElementById(buttonData.containerDivId);
+      el.remove();
+      console.log(buttonData.containerDivId);
     },
   }));
 });
