@@ -8,6 +8,7 @@
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
+    <link href="//cdn.quilljs.com/1.0.0/quill.bubble.css" rel="stylesheet" />
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/styles.css') }}"
@@ -531,7 +532,7 @@
     </div>
     <div id="proposal-section-container" class="group relative">
       <div
-        class="section-interface group-hover:block hidden absolute right-7 bg-gray-300 bg-black bg-opacity-0 hover:bg-opacity-50 transition-opacity duration-200 ease-in rounded-md p-2"
+        class="section-interface group-hover:block hidden absolute right-7 bg-gray-300 bg-black bg-opacity-0 hover:bg-opacity-50 transition-opacity duration-200 ease-in rounded-md p-2 z-[1000]"
       >
         <ul class="flex justify-end space-x-4">
           <li>

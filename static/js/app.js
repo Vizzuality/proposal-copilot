@@ -1,6 +1,8 @@
 import Alpine from "alpinejs";
 import { Ripple, initTE } from "tw-elements";
 import showdown from "showdown";
+import Quill from "quill";
+
 const converter = new showdown.Converter();
 
 const analysisIterations = 8;
@@ -310,6 +312,69 @@ document.addEventListener("alpine:init", () => {
       el.remove();
       console.log(buttonData.containerDivId);
     },
+    edit(event) {
+      event.preventDefault();
+      console.log("edit button clicked");
+      const buttonData = getButtonData(event.target);
+      const elId = buttonData.sectionName;
+      const el = "section-div-" + elId;
+
+      // Get the target div and its parent container
+      const targetDiv = document.getElementById(el);
+      const containerDiv = targetDiv.parentElement;
+
+      var options = {
+        modules: {
+          toolbar: [
+            [{ header: [1, 2, 3, 4, false] }],
+            ["bold", "italic", "underline"],
+          ],
+          keyboard: {
+            bindings: {
+              // bind shift+enter
+              shiftEnter: {
+                key: 13, // the key code for enter
+                shiftKey: true, // require shift to be held down
+                handler: function () {
+                  // handle shift+enter here
+                  const editor = document.querySelector(".ql-editor");
+                  let html = editor.innerHTML;
+                  quill.disable();
+                  quill = null;
+
+                  // Remove Quill classes
+                  editor.classList.remove("ql-editor");
+                  editor.parentNode.classList.remove("ql-container");
+                  editor.parentNode.classList.remove("ql-bubble");
+                  editor.parentNode.classList.remove("ql-disabled");
+
+                  // Remove toolbar and tooltip elements
+                  let tooltip = document.querySelector(".ql-tooltip");
+                  let toolbar = document.querySelector(".ql-toolbar");
+                  let clipboard = document.querySelector(".ql-clipboard");
+
+                  // They are likely appended to body or some other common parent, not to the Quill container itself
+                  tooltip.parentNode.removeChild(tooltip);
+                  toolbar.parentNode.removeChild(toolbar);
+                  clipboard.parentNode.removeChild(clipboard);
+
+                  editor.parentNode.innerHTML = html;
+
+                  console.log("Shift+Enter was pressed!");
+                },
+              },
+            },
+          },
+        },
+        debug: "error",
+        theme: "bubble",
+        bounds: containerDiv,
+        scrollingContainer: targetDiv,
+      };
+
+      // Initialize Quill on the target div
+      let quill = new Quill(targetDiv, options);
+    },
   }));
 });
 
@@ -326,9 +391,8 @@ function getButtonData(button) {
 
   // Extract the dynamic section name from the id
   const sectionName = containerDiv.id.slice("section-container-".length);
-
-  // Get the text inside the div
   const textContent = containerDiv.innerText;
+  console.log(sectionName, textContent, containerDivId);
 
   return { sectionName, textContent, containerDivId };
 }
