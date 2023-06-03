@@ -75,7 +75,7 @@
         >
           <div class="inset-y-0 left-0 z-50 block bg-gray-900" x-data>
             <nav class="">
-              <ul role="list" class="flex items-center space-x-4">
+              <ul role="list" class="flex items-center space-x-0">
                 <li>
                   <!-- Current: "bg-gray-800 text-white", Default: "text-gray-400 hover:text-white hover:bg-gray-800" -->
                   <a
@@ -618,7 +618,7 @@
               href="#"
               x-data="buttonHandlers()"
               class="research text-gray-400 hover:text-gray-900 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
-              x-on:click.prevent="ask($event)"
+              x-on:click.prevent="askGPT($event)"
               data-te-toggle="tooltip"
               title="Ask GPT"
             >

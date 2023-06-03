@@ -1,0 +1,59 @@
+import asyncio
+
+from flask import Blueprint, jsonify, request
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts.chat import (
+    ChatPromptTemplate,
+    SystemMessagePromptTemplate,
+    AIMessagePromptTemplate,
+    HumanMessagePromptTemplate,
+)
+from langchain.schema import AIMessage, HumanMessage, SystemMessage
+
+solve = Blueprint("solve", __name__)
+
+
+@solve.route("/solve", methods=["POST"])
+def solve_function():
+    prompts = [{"title": "askGPTSection", "prompt": request.form.get("section-prompt")}]
+    output_dict = {}
+
+    for prompt in prompts:
+        # asyncio.run creates a new event loop and runs the coroutine until it's done
+        prompt, result = asyncio.run(
+            send_question(prompt)
+        )  # pass qa to ask_gpt function
+        output_dict[prompt] = result
+    print(output_dict)
+    return jsonify(output_dict), 200
+
+
+async def send_question(prompt_obj):  # receive qa as an argument
+    try:
+        # Let's run the blocking function in a separate thread using asyncio.to_thread
+        chat = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7)
+        print(prompt_obj["prompt"])
+        messages = [
+            SystemMessage(
+                content="Answer with a formal and knowledgable language. Add extensive relevant content."
+            ),
+            HumanMessage(content=prompt_obj["prompt"]),
+        ]
+        response = chat(messages)
+        print(response)
+    except Exception as e:
+        response = None
+        print(e)
+    finally:
+        response_content = response.content
+        print(
+            prompt_obj["title"],
+            {
+                "question": prompt_obj["prompt"],
+                "response": response,
+            },
+        )
+        return prompt_obj["title"], {
+            "question": prompt_obj["prompt"],
+            "response": response_content,
+        }
