@@ -195,6 +195,14 @@ const apiFunctionFactory = {
         url = "/similarity";
         actionTitle = "From previous proposals";
         break;
+      case "askGPT":
+        url = "/ask-gpt";
+        actionTitle = "Reponse from GPT";
+        break;
+      case "solve":
+        url = "/solve";
+        actionTitle = "Solved using Tree of Thoughs";
+        break;
       default:
         console.log("Invalid analysis type");
     }
@@ -299,6 +307,34 @@ document.addEventListener("alpine:init", () => {
       formData.append("section-title", buttonData.sectionName);
       formData.append("container-div", buttonData.containerDivId);
       formData.append("analysis-type", "similarity");
+      for (var pair of formData.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+      }
+      apiFunctionFactory.analyzePDF(null, formData);
+    },
+    askGPT(event) {
+      event.preventDefault();
+      console.log("askGPT button clicked");
+      const buttonData = getButtonData(event.target);
+      const formData = new FormData();
+      formData.append("section-prompt", buttonData.textContent);
+      formData.append("section-title", buttonData.sectionName);
+      formData.append("container-div", buttonData.containerDivId);
+      formData.append("analysis-type", "askGPT");
+      for (var pair of formData.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+      }
+      apiFunctionFactory.analyzePDF(null, formData);
+    },
+    solve(event) {
+      event.preventDefault();
+      console.log("solve button clicked");
+      const buttonData = getButtonData(event.target);
+      const formData = new FormData();
+      formData.append("section-prompt", buttonData.textContent);
+      formData.append("section-title", buttonData.sectionName);
+      formData.append("container-div", buttonData.containerDivId);
+      formData.append("analysis-type", "solve");
       for (var pair of formData.entries()) {
         console.log(pair[0] + ", " + pair[1]);
       }
