@@ -52,6 +52,31 @@ Alpine.store("messageStore", {
   },
 });
 
+// Confirm store
+
+Alpine.store("confirmStore", {
+  isOpen: false,
+  message: "",
+  confirmHandler: null,
+
+  open(message, confirmHandler) {
+    this.message = message;
+    this.confirmHandler = confirmHandler;
+    this.isOpen = true;
+  },
+
+  close() {
+    this.isOpen = false;
+  },
+
+  confirm() {
+    if (this.confirmHandler) {
+      this.confirmHandler();
+    }
+    this.close();
+  },
+});
+
 // Main menu store
 Alpine.store("mainMenuStore", {
   state: "initial",
@@ -219,9 +244,14 @@ document.addEventListener("alpine:init", () => {
     },
     remove(event) {
       event.preventDefault();
-      const buttonData = getButtonData(event.target);
-      const el = document.getElementById(buttonData.containerDivId);
-      el.remove();
+      Alpine.store("confirmStore").open(
+        "Do you want to remove this section? This can't be undone.",
+        function () {
+          const buttonData = getButtonData(event.target);
+          const el = document.getElementById(buttonData.containerDivId);
+          el.remove();
+        }
+      );
     },
     edit(event) {
       event.preventDefault();
