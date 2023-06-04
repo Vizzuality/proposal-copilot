@@ -16,14 +16,12 @@ const loader = {
   },
   hide: function () {
     Alpine.store("mainMenuStore").isLoading = false;
-    console.log("hiding loader");
   },
 };
 
 // Hide forms
 const hideInterface = function () {
   Alpine.store("mainMenuStore").showInterface("");
-  console.log("hiding interface");
 };
 
 // Main document store
@@ -32,6 +30,26 @@ Alpine.store("uploadStore", {
   title: "",
   indexName:
     "vector_indexes/faiss_index_react_f16f6f22-65ab-4ef4-a064-acd624ebcf57",
+});
+
+// Message store
+Alpine.store("messageStore", {
+  message: "",
+  messageType: "", // this will be either 'error' or 'info'
+  displayMessage: false,
+  setMessage(message, type) {
+    this.message = message;
+    this.messageType = type;
+    this.displayMessage = true;
+    if (type === "info") {
+      setTimeout(() => {
+        this.displayMessage = false;
+      }, 2000);
+    }
+  },
+  closeMessage() {
+    this.displayMessage = false;
+  },
 });
 
 // Main menu store
@@ -85,29 +103,39 @@ Alpine.data("mainMenuData", () => ({
     console.log("open document");
   },
   copyToClipboard() {
-    console.log("copy to clipboard");
     var textToCopy = document.getElementById("editor-content").innerText;
     navigator.clipboard.writeText(textToCopy).then(
       function () {
-        console.log("Text copied.");
+        Alpine.store("messageStore").setMessage(
+          "Text copied to the clipboard.",
+          "info"
+        );
       },
       function (err) {
-        console.error("Could not copy text: ", err);
+        Alpine.store("messageStore").setMessage(
+          "Could not copy text: " + err,
+          "error"
+        );
       }
     );
   },
   analyzeDocument() {
-    console.log("clicked");
     loader.show();
     if (Alpine.store("uploadStore").indexName === "") {
-      console.log("Empty index");
+      Alpine.store("messageStore").setMessage(
+        "Please, upload a document first.",
+        "error"
+      );
       loader.hide();
       return;
     }
     if (this.docAnalyzed == false) {
       for (let i = 0; i <= analysisIterations; i++) {
         setTimeout(() => {
-          console.log("analyzing");
+          Alpine.store("messageStore").setMessage(
+            "Analyzing document, this will take a moment.",
+            "info"
+          );
 
           this.tempFormData = new FormData();
           this.tempFormData.append("analysis-type", "initial-analysis");
@@ -122,10 +150,12 @@ Alpine.data("mainMenuData", () => ({
     }
   },
   createEmpty() {
-    console.log("clicked");
     loader.show();
     if (Alpine.store("uploadStore").indexName === "") {
-      console.log("Empty index");
+      Alpine.store("messageStore").setMessage(
+        "Please, upload a document first",
+        "error"
+      );
       loader.hide();
       return;
     }
@@ -145,10 +175,8 @@ document.addEventListener("alpine:init", () => {
   Alpine.data("sectionMenu", () => ({
     elaborate(event) {
       event.preventDefault();
-      console.log("elaborate button clicked");
       const buttonData = getButtonData(event.target);
       const formData = new FormData();
-      console.log(buttonData.textContent);
       formData.append("section-prompt", buttonData.textContent);
       formData.append("section-title", buttonData.sectionName);
       formData.append("container-div", buttonData.containerDivId);
@@ -157,57 +185,44 @@ document.addEventListener("alpine:init", () => {
     },
     similarity(event) {
       event.preventDefault();
-      console.log("similarity button clicked");
       const buttonData = getButtonData(event.target);
       const formData = new FormData();
       formData.append("section-prompt", buttonData.textContent);
       formData.append("section-title", buttonData.sectionName);
       formData.append("container-div", buttonData.containerDivId);
       formData.append("analysis-type", "similarity");
-      for (var pair of formData.entries()) {
-        console.log(pair[0] + ", " + pair[1]);
-      }
       apiFunctionFactory.analyzePDF(null, formData);
     },
     askGPT(event) {
       event.preventDefault();
-      console.log("askGPT button clicked");
       const buttonData = getButtonData(event.target);
       const formData = new FormData();
       formData.append("section-prompt", buttonData.textContent);
       formData.append("section-title", buttonData.sectionName);
       formData.append("container-div", buttonData.containerDivId);
       formData.append("analysis-type", "askGPT");
-      for (var pair of formData.entries()) {
-        console.log(pair[0] + ", " + pair[1]);
-      }
+
       apiFunctionFactory.analyzePDF(null, formData);
     },
     solve(event) {
       event.preventDefault();
-      console.log("solve button clicked");
       const buttonData = getButtonData(event.target);
       const formData = new FormData();
       formData.append("section-prompt", buttonData.textContent);
       formData.append("section-title", buttonData.sectionName);
       formData.append("container-div", buttonData.containerDivId);
       formData.append("analysis-type", "solve");
-      for (var pair of formData.entries()) {
-        console.log(pair[0] + ", " + pair[1]);
-      }
+
       apiFunctionFactory.analyzePDF(null, formData);
     },
     remove(event) {
       event.preventDefault();
-      console.log("remove button clicked");
       const buttonData = getButtonData(event.target);
       const el = document.getElementById(buttonData.containerDivId);
       el.remove();
-      console.log(buttonData.containerDivId);
     },
     edit(event) {
       event.preventDefault();
-      console.log("edit button clicked");
       const buttonData = getButtonData(event.target);
       const elId = buttonData.sectionName;
       const el = "section-div-" + elId;
@@ -253,7 +268,10 @@ document.addEventListener("alpine:init", () => {
 
                   editor.parentNode.innerHTML = html;
 
-                  console.log("Shift+Enter was pressed!");
+                  Alpine.store("messageStore").setMessage(
+                    "Exited edit mode.",
+                    "info"
+                  );
                 },
               },
             },
@@ -267,6 +285,7 @@ document.addEventListener("alpine:init", () => {
 
       // Initialize Quill on the target div
       let quill = new Quill(targetDiv, options);
+      Alpine.store("messageStore").setMessage("Entering edit mode.", "info");
     },
   }));
 });
@@ -286,23 +305,31 @@ const apiFunctionFactory = {
       .then((data) => {
         if (data.error) {
           document.getElementById("upload-response").innerText = data["error"];
+          Alpine.store("messageStore").setMessage(
+            "Sorry, an error occurred: " + data["error"],
+            "error"
+          );
         } else {
-          console.log(data["response"]);
           Alpine.store("uploadStore").title = data["response"];
           Alpine.store("uploadStore").indexName = data["vector_index"];
-          console.log(data);
           hideInterface();
         }
         loader.hide();
         return data;
       })
       .catch((error) => {
-        console.error("Error:", error);
+        Alpine.store("messageStore").setMessage(
+          "Sorry, an error occurred: " + error,
+          "error"
+        );
       });
   },
   createEmptySection: function (formId = null, formData = null) {
     if (Alpine.store("uploadStore").indexName === "") {
-      console.log("Empty index");
+      Alpine.store("messageStore").setMessage(
+        "Please, upload a document first",
+        "error"
+      );
     }
     let data = {
       Empty: {
@@ -310,19 +337,20 @@ const apiFunctionFactory = {
         response: "Edit this content",
       },
     };
-    console.log("Creating empty section");
     parseResponseAndAppendToDOM(data);
     loader.hide();
+    Alpine.store("messageStore").setMessage("New section created", "info");
     return;
   },
   analyzePDF: function (formId = null, formData = null) {
     if (Alpine.store("uploadStore").indexName === "") {
-      console.log("Empty index");
+      Alpine.store("messageStore").setMessage(
+        "Please, upload a document first",
+        "error"
+      );
       loader.hide();
       return;
     }
-    console.log("index:");
-    console.log(Alpine.store("uploadStore").indexName);
     loader.show();
     if (formId && document.getElementById(formId)) {
       const form = document.getElementById(formId);
@@ -372,23 +400,29 @@ const apiFunctionFactory = {
       .then((data) => {
         if (data.error) {
           document.getElementById("prompt-response").innerText = data["error"];
+          Alpine.store("messageStore").setMessage(
+            "Sorry, an error occurred: " + data["error"],
+            "error"
+          );
         } else {
           if (
             analysisType === "initial-analysis" ||
             analysisType === "new-section"
           ) {
             parseResponseAndAppendToDOM(data);
-            console.log("new section");
           } else {
             data["container-div"] = formData.get("container-div");
             data["action-title"] = actionTitle;
             editContentInDOM(data);
-            console.log("edit section");
           }
         }
         return data;
       })
       .catch((error) => {
+        Alpine.store("messageStore").setMessage(
+          "Sorry, an error occurred: " + error,
+          "error"
+        );
         console.error("Error:", error);
       });
   },
@@ -430,12 +464,12 @@ document.getElementById("file-upload").addEventListener("change", function (e) {
 document
   .getElementById("new-section")
   .addEventListener("submit", function (event) {
-    console.log("submit");
     event.preventDefault();
     hideInterface();
     apiFunctionFactory.analyzePDF("new-section");
     document.getElementById("section-title").value = "";
     document.getElementById("section-prompt").value = "";
+    Alpine.store("messageStore").setMessage("Sending to AI.", "info");
   });
 
 // Function to get data for the event initiator
@@ -443,22 +477,20 @@ function getButtonData(button) {
   const containerDiv = button.closest('div[id^="section-container-"]');
   const containerDivId = containerDiv.id;
   if (!containerDiv) {
-    console.error(
-      "Button must be inside a div with an id that starts with 'section-container-'."
+    Alpine.store("messageStore").setMessage(
+      "Sorry, an error occurred: missing container",
+      "error"
     );
     return null;
   }
   const sectionName = containerDiv.id.slice("section-container-".length);
   const textContent = containerDiv.innerText;
-  console.log(sectionName, textContent, containerDivId);
 
   return { sectionName, textContent, containerDivId };
 }
 
 // Response paresers
 function parseResponseAndAppendToDOM(data) {
-  console.log("data");
-  console.log(data);
   let current_date = new Date();
   let time_string =
     current_date.getHours() +
@@ -478,8 +510,6 @@ function parseResponseAndAppendToDOM(data) {
       "section-container-" + key.replace(/ /g, "-") + "-" + time_string;
 
     const sectionDiv = sectionContainer.querySelector("#proposal-section");
-    console.log("sectionDiv");
-    console.log(sectionDiv);
 
     sectionDiv.removeAttribute("id");
     sectionDiv.id = "section-div-" + key.replace(/ /g, "-") + "-" + time_string;
@@ -494,12 +524,11 @@ function parseResponseAndAppendToDOM(data) {
 
     editorContent.appendChild(sectionContainer);
   }
+  Alpine.store("messageStore").setMessage("New section created", "info");
   loader.hide();
 }
 
 function editContentInDOM(data) {
-  console.log("data");
-  console.log(data);
   const sectionContainerId = data["container-div"];
   const sectionDivId = sectionContainerId.replace(
     "section-container-",
@@ -508,13 +537,9 @@ function editContentInDOM(data) {
 
   const sectionDiv = document.getElementById(sectionDivId);
 
-  console.log("sectionDiv");
-  console.log(sectionDiv);
-
   const h4 = document.createElement("h4");
   h4.textContent = data["action-title"];
   sectionDiv.appendChild(h4);
-  console.log("textContent");
 
   for (const key in data) {
     if (key !== "container-div") {
@@ -524,20 +549,13 @@ function editContentInDOM(data) {
       ) {
         const markdownText = data[key]["response"];
         const htmlText = converter.makeHtml(markdownText);
-        console.log("markdownText");
-        console.log(markdownText);
-        console.log("htmlText");
-        console.log(htmlText);
 
         // Create a temporary div to hold the HTML
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = htmlText;
-        console.log("tempDiv.firstChild");
-        console.log(tempDiv.firstChild);
 
         // Append all elements from the temporary div to the sectionDiv
         while (tempDiv.firstChild) {
-          console.log("appending");
           if (tempDiv.firstChild) {
             sectionDiv.appendChild(tempDiv.firstChild);
           }
@@ -545,6 +563,10 @@ function editContentInDOM(data) {
       }
     }
   }
+  Alpine.store("messageStore").setMessage(
+    "New info added to " + data["action-title"],
+    "info"
+  );
   loader.hide();
 }
 

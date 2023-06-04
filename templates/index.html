@@ -69,13 +69,10 @@
         </div>
         <div class="bg-pink-600" style="height: 1px"></div>
 
-        <div
-          id="main-toolbar"
-          class="items-center gap-x-6 bg-gray-900 px-6 py-0.5"
-        >
+        <div id="main-toolbar" class="items-center gap-x-6 bg-gray-900 py-0.5">
           <div class="inset-y-0 left-0 z-50 block bg-gray-900" x-data>
             <nav class="">
-              <ul role="list" class="flex items-center space-x-0">
+              <ul role="list" class="flex items-center space-x-0 px-5">
                 <li>
                   <!-- Current: "bg-gray-800 text-white", Default: "text-gray-400 hover:text-white hover:bg-gray-800" -->
                   <a
@@ -337,6 +334,52 @@
                   </a>
                 </li>
               </ul>
+              <!-- Flash messages -->
+              <div
+                id="flash-messages"
+                x-data
+                x-show="$store.messageStore.displayMessage"
+                x-transition:enter="transition ease-out duration-100"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-700"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                :class="{'bg-red-600': $store.messageStore.messageType === 'error', 'bg-pink-600': $store.messageStore.messageType === 'info'}"
+                class="message-div flex flex-col items-center justify-center relative"
+              >
+                <div
+                  class="close-container absolute top-0 right-2"
+                  x-show="$store.messageStore.messageType === 'error'"
+                >
+                  <a
+                    @click="$store.messageStore.closeMessage()"
+                    href="#"
+                    class="close text-white hover:text-pink-400 group gap-x-3 rounded-md p-0 text-xs leading-6 font-semibol"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </a>
+                </div>
+                <p
+                  class="text-white text-xs text-center"
+                  x-text="$store.messageStore.message"
+                >
+                  <!-- The message will be displayed here -->
+                </p>
+              </div>
               <!-- Upload form -->
               <div
                 id="upload-form-div"
