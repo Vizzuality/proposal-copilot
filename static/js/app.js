@@ -7,13 +7,6 @@ const converter = new showdown.Converter();
 
 const analysisIterations = 8;
 
-Alpine.store("uploadStore", {
-  showForm: false,
-  title: "",
-  indexName:
-    "vector_indexes/faiss_index_react_f16f6f22-65ab-4ef4-a064-acd624ebcf57",
-});
-
 const loader = {
   show: function () {
     Alpine.store("mainMenuStore").isLoading = true;
@@ -28,6 +21,13 @@ const hideInterface = function () {
   Alpine.store("mainMenuStore").showInterface("");
   console.log("hiding interface");
 };
+
+Alpine.store("uploadStore", {
+  showForm: false,
+  title: "",
+  indexName:
+    "vector_indexes/faiss_index_react_f16f6f22-65ab-4ef4-a064-acd624ebcf57",
+});
 
 Alpine.store("mainMenuStore", {
   state: "initial",
@@ -132,19 +132,6 @@ Alpine.data("mainMenuData", () => ({
     console.log("new file");
   },
 }));
-
-// Singleton function
-const SingletonFunction = (() => {
-  function callFunction(functionCalled, params) {
-    console.log("singleton params:");
-    console.log(params);
-    return functionCalled(params);
-  }
-
-  return {
-    callFunction: callFunction,
-  };
-})();
 
 // Factory for API call functions
 const apiFunctionFactory = {
@@ -285,26 +272,28 @@ document
 document.getElementById("upload-form").addEventListener("drop", function (e) {
   e.preventDefault();
   e.stopPropagation();
-  loader.show();
   const files = e.dataTransfer.files;
   if (files.length > 0) {
-    SingletonFunction.callFunction(apiFunctionFactory.uploadFile, {
-      file: files[0],
-    });
+    // SingletonFunction.callFunction(apiFunctionFactory.uploadFile, {
+    //   file: files[0],
+    // });
+    apiFunctionFactory.uploadFile({ file: files[0] });
+    loader.show();
   }
 });
 
 document.getElementById("file-upload").addEventListener("change", function (e) {
   e.preventDefault();
-  loader.show();
   const files = e.target.files;
   if (files.length > 0) {
-    SingletonFunction.callFunction(apiFunctionFactory.uploadFile, {
-      file: files[0],
-    });
+    // SingletonFunction.callFunction(apiFunctionFactory.uploadFile, {
+    //   file: files[0],
+    // });
+    apiFunctionFactory.uploadFile({ file: files[0] });
     loader.show();
   }
 });
+
 document
   .getElementById("new-section")
   .addEventListener("submit", function (event) {
@@ -317,7 +306,7 @@ document
   });
 
 document.addEventListener("alpine:init", () => {
-  Alpine.data("buttonHandlers", () => ({
+  Alpine.data("sectionMenu", () => ({
     elaborate(event) {
       event.preventDefault();
       console.log("elaborate button clicked");
