@@ -606,7 +606,7 @@
     </div>
     <div id="proposal-section-container" class="group relative">
       <div
-        class="section-interface group-hover:block hidden absolute right-7 bg-gray-300 bg-black bg-opacity-0 hover:bg-opacity-50 transition-opacity duration-200 ease-in rounded-md p-2 z-[1000]"
+        class="section-interface group-hover:block hidden absolute right-7 bg-gray-300 bg-black bg-opacity-0 hover:bg-opacity-50 transition-opacity duration-200 ease-in rounded-md p-2"
       >
         <ul class="flex justify-end space-x-4">
           <li>
@@ -614,7 +614,8 @@
               href="#"
               x-data="sectionMenu()"
               class="elaborate text-gray-400 hover:text-gray-900 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
-              x-on:click.prevent="edit($event)"
+              x-on:click.prevent="if (!$store.mainMenuStore.quillIsActive) {edit($event)}"
+              :class="{ 'opacity-50 cursor-not-allowed': $store.mainMenuStore.quillIsActive }"
               data-te-toggle="tooltip"
               title="Edit"
             >
@@ -639,7 +640,8 @@
               href="#"
               x-data="sectionMenu()"
               class="elaborate text-gray-400 hover:text-gray-900 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
-              x-on:click.prevent="elaborate($event)"
+              x-on:click.prevent="if (!$store.mainMenuStore.quillIsActive) {elaborate($event)}"
+              :class="{ 'opacity-50 cursor-not-allowed': $store.mainMenuStore.quillIsActive }"
               data-te-toggle="tooltip"
               title="Expand this info"
             >
@@ -663,7 +665,8 @@
             <a
               href="#"
               x-data="sectionMenu()"
-              x-on:click.prevent="similarity($event)"
+              x-on:click.prevent="if (!$store.mainMenuStore.quillIsActive) {similarity($event)}"
+              :class="{ 'opacity-50 cursor-not-allowed': $store.mainMenuStore.quillIsActive }"
               class="similarity text-gray-400 hover:text-gray-900 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
               data-te-toggle="tooltip"
               title="Find similar proposals"
@@ -689,7 +692,8 @@
               href="#"
               x-data="sectionMenu()"
               class="research text-gray-400 hover:text-gray-900 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
-              x-on:click.prevent="askGPT($event)"
+              x-on:click.prevent="if (!$store.mainMenuStore.quillIsActive) {askGPT($event)}"
+              :class="{ 'opacity-50 cursor-not-allowed': $store.mainMenuStore.quillIsActive }"
               data-te-toggle="tooltip"
               title="Ask GPT"
             >
@@ -715,7 +719,8 @@
               x-data="sectionMenu()"
               class="close text-gray-400 hover:text-gray-900 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
               data-te-toggle="tooltip"
-              x-on:click.prevent="solve($event)"
+              x-on:click.prevent="if (!$store.mainMenuStore.quillIsActive) {solve($event)}"
+              :class="{ 'opacity-50 cursor-not-allowed': $store.mainMenuStore.quillIsActive }"
               data-te-toggle="tooltip"
               title="Solve a difficult problem"
             >
@@ -741,7 +746,8 @@
               x-data="sectionMenu()"
               class="close text-gray-400 hover:text-gray-900 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
               data-te-toggle="tooltip"
-              x-on:click.prevent="remove($event)"
+              x-on:click.prevent="if (!$store.mainMenuStore.quillIsActive) {remove($event)}"
+              :class="{ 'opacity-50 cursor-not-allowed': $store.mainMenuStore.quillIsActive }"
               data-te-toggle="tooltip"
               title="Remove section"
             >

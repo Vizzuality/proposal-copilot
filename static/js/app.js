@@ -56,6 +56,7 @@ Alpine.store("messageStore", {
 Alpine.store("mainMenuStore", {
   state: "initial",
   activeInterface: "",
+  quillIsActive: false,
   isLoading: false,
   showInterface(interfaceName) {
     if (this.activeInterface !== interfaceName) {
@@ -173,6 +174,7 @@ Alpine.data("mainMenuData", () => ({
 //Section menu interface
 document.addEventListener("alpine:init", () => {
   Alpine.data("sectionMenu", () => ({
+    quillIsActive: false,
     elaborate(event) {
       event.preventDefault();
       const buttonData = getButtonData(event.target);
@@ -267,7 +269,7 @@ document.addEventListener("alpine:init", () => {
                   clipboard.parentNode.removeChild(clipboard);
 
                   editor.parentNode.innerHTML = html;
-
+                  Alpine.store("mainMenuStore").quillIsActive = false;
                   Alpine.store("messageStore").setMessage(
                     "Exited edit mode.",
                     "info"
@@ -286,6 +288,7 @@ document.addEventListener("alpine:init", () => {
       // Initialize Quill on the target div
       let quill = new Quill(targetDiv, options);
       Alpine.store("messageStore").setMessage("Entering edit mode.", "info");
+      Alpine.store("mainMenuStore").quillIsActive = true;
     },
   }));
 });
