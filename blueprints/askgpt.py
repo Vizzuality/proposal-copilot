@@ -9,6 +9,7 @@ from langchain.prompts.chat import (
     HumanMessagePromptTemplate,
 )
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
+from config import chat_model as chat_model
 
 ask_gpt = Blueprint("ask_gpt", __name__)
 
@@ -31,7 +32,7 @@ def ask_gpt_function():
 async def send_question(prompt_obj):  # receive qa as an argument
     try:
         # Let's run the blocking function in a separate thread using asyncio.to_thread
-        chat = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7)
+        chat = ChatOpenAI(model=chat_model, temperature=0.7)
         print(prompt_obj["prompt"])
         messages = [
             SystemMessage(

@@ -80,7 +80,7 @@ def analyze_pdf_function():
         # asyncio.run creates a new event loop and runs the coroutine until it's done
         prompt, result = asyncio.run(ask_pdf(prompt, qa))  # pass qa to ask_pdf function
         output_dict[prompt] = result
-    print(jsonify(output_dict))
+    print(output_dict)
     return jsonify(output_dict), 200
 
 
@@ -88,7 +88,7 @@ async def ask_pdf(prompt_obj, qa):  # receive qa as an argument
     try:
         # Let's run the blocking function in a separate thread using asyncio.to_thread
         response = await asyncio.to_thread(qa.run, prompt_obj["prompt"])
-        print(response)
+
     except Exception as e:
         response = None
     finally:

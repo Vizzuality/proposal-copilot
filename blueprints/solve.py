@@ -1,59 +1,54 @@
-import asyncio
-
 from flask import Blueprint, jsonify, request
-from langchain.chat_models import ChatOpenAI
-from langchain.prompts.chat import (
-    ChatPromptTemplate,
-    SystemMessagePromptTemplate,
-    AIMessagePromptTemplate,
-    HumanMessagePromptTemplate,
-)
-from langchain.schema import AIMessage, HumanMessage, SystemMessage
+from tree_of_thoughts import OptimizedOpenAILanguageModel
+from tree_of_thoughts import TreeofThoughts
+from config import openai_api_key as openai_api_key
+from config import chat_model as chat_model
 
 solve = Blueprint("solve", __name__)
 
 
 @solve.route("/solve", methods=["POST"])
 def solve_function():
-    prompts = [{"title": "askGPTSection", "prompt": request.form.get("section-prompt")}]
+    title = request.form.get("section-title")
+    prompt_str = request.form.get("section-prompt")
     output_dict = {}
 
-    for prompt in prompts:
-        # asyncio.run creates a new event loop and runs the coroutine until it's done
-        prompt, result = asyncio.run(
-            send_question(prompt)
-        )  # pass qa to ask_gpt function
-        output_dict[prompt] = result
+    model = OptimizedOpenAILanguageModel(api_model=chat_model, api_key=openai_api_key)
+
+    # choose search algorithm('BFS' or 'DFS')
+    search_algorithm = "BFS"
+
+    # cot or propose
+    strategy = "cot"
+
+    # value or vote
+    evaluation_strategy = "value"
+
+    # initialize the class
+    tree_of_thoughts = TreeofThoughts(model, search_algorithm)
+
+    # enter an problem if you want!
+    # input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"  #
+    input_problem = prompt_str
+    # note for superior intelligent responses you'll have to be more explicit in your prompt and select a better model
+
+    num_thoughts = 5
+    max_steps = 3
+    max_states = 5
+    value_threshold = 0.5
+    solution = tree_of_thoughts.solve(
+        input_problem,
+        num_thoughts=num_thoughts,
+        max_steps=max_steps,
+        max_states=max_states,
+        value_threshold=value_threshold,
+    )
+    solution_str = " ".join(solution)
+    print(solution_str)
+    title, result = title, {
+        "question": prompt_str,
+        "response": solution_str,
+    }
+    output_dict[title] = result
     print(output_dict)
     return jsonify(output_dict), 200
-
-
-async def send_question(prompt_obj):  # receive qa as an argument
-    try:
-        # Let's run the blocking function in a separate thread using asyncio.to_thread
-        chat = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7)
-        print(prompt_obj["prompt"])
-        messages = [
-            SystemMessage(
-                content="Answer with a formal and knowledgable language. Add extensive relevant content."
-            ),
-            HumanMessage(content=prompt_obj["prompt"]),
-        ]
-        response = chat(messages)
-        print(response)
-    except Exception as e:
-        response = None
-        print(e)
-    finally:
-        response_content = response.content
-        print(
-            prompt_obj["title"],
-            {
-                "question": prompt_obj["prompt"],
-                "response": response,
-            },
-        )
-        return prompt_obj["title"], {
-            "question": prompt_obj["prompt"],
-            "response": response_content,
-        }

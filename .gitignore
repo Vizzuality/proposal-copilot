@@ -4,6 +4,8 @@ vector_indexes
 proposal_index.pdf
 *.ipynb
 static/css/styles.css
+openai.logs
+logs
 # common
 .DS_Store
 .env
