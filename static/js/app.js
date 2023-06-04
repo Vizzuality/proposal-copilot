@@ -438,9 +438,8 @@ document
     document.getElementById("section-prompt").value = "";
   });
 
-// Miscelaneous functions
+// Function to get data for the event initiator
 function getButtonData(button) {
-  // Get the closest ancestor div with an id that starts with "section-container-"
   const containerDiv = button.closest('div[id^="section-container-"]');
   const containerDivId = containerDiv.id;
   if (!containerDiv) {
@@ -449,8 +448,6 @@ function getButtonData(button) {
     );
     return null;
   }
-
-  // Extract the dynamic section name from the id
   const sectionName = containerDiv.id.slice("section-container-".length);
   const textContent = containerDiv.innerText;
   console.log(sectionName, textContent, containerDivId);
@@ -503,8 +500,6 @@ function parseResponseAndAppendToDOM(data) {
 function editContentInDOM(data) {
   console.log("data");
   console.log(data);
-
-  // Get the existing div using the provided id
   const sectionContainerId = data["container-div"];
   const sectionDivId = sectionContainerId.replace(
     "section-container-",
@@ -527,7 +522,6 @@ function editContentInDOM(data) {
         typeof data[key] === "object" &&
         data[key].hasOwnProperty("response")
       ) {
-        // Parse markdown to HTML
         const markdownText = data[key]["response"];
         const htmlText = converter.makeHtml(markdownText);
         console.log("markdownText");
