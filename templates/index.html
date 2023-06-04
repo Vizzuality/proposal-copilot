@@ -219,13 +219,41 @@
                     <span class="sr-only">New section</span>
                   </a>
                 </li>
+                <li>
+                  <a
+                    x-data="mainMenuData()"
+                    @click.prevent="createEmpty"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state6' }"
+                    @click="$store.mainMenuStore.showInterface('initial')"
+                    href="#"
+                    class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                    data-te-toggle="tooltip"
+                    title="Copy to clipboard"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                      />
+                    </svg>
 
+                    <span class="sr-only">Empty section</span>
+                  </a>
+                </li>
                 <li>
                   <a
                     x-data="mainMenuData()"
                     @click.prevent="copyToClipboard"
-                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state6' }"
-                    @click="$store.mainMenuStore.showInterface('interface6')"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'initial' }"
+                    @click="$store.mainMenuStore.showInterface('interface7')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -251,8 +279,8 @@
                 </li>
                 <li>
                   <a
-                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state7' }"
-                    @click="$store.mainMenuStore.showInterface('interface7')"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state8' }"
+                    @click="$store.mainMenuStore.showInterface('interface8')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -278,8 +306,8 @@
                 </li>
                 <li>
                   <a
-                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state8' }"
-                    @click="$store.mainMenuStore.showInterface('interface8')"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state9' }"
+                    @click="$store.mainMenuStore.showInterface('interface9')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"

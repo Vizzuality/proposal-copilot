@@ -61,6 +61,9 @@ Alpine.store("mainMenuStore", {
         case "interface8":
           this.state = "state8";
           break;
+        case "interface9":
+          this.state = "state9";
+          break;
         default:
           this.state = "initial";
       }
@@ -111,6 +114,20 @@ Alpine.data("mainMenuData", () => ({
       }
     }
   },
+  createEmpty() {
+    console.log("clicked");
+    loader.show();
+    if (Alpine.store("uploadStore").indexName === "") {
+      console.log("Empty index");
+      loader.hide();
+      return;
+    }
+
+    this.tempFormData = new FormData();
+    this.tempFormData.append("analysis-type", "empty-section");
+    apiFunctionFactory.createEmptySection(null, this.tempFormData);
+  },
+
   newDocument() {
     console.log("new file");
   },
@@ -157,6 +174,21 @@ const apiFunctionFactory = {
       .catch((error) => {
         console.error("Error:", error);
       });
+  },
+  createEmptySection: function (formId = null, formData = null) {
+    if (Alpine.store("uploadStore").indexName === "") {
+      console.log("Empty index");
+    }
+    let data = {
+      Empty: {
+        question: "Empty section",
+        response: "Edit this content",
+      },
+    };
+    console.log("Creating empty section");
+    parseResponseAndAppendToDOM(data);
+    loader.hide();
+    return;
   },
   analyzePDF: function (formId = null, formData = null) {
     if (Alpine.store("uploadStore").indexName === "") {
@@ -436,20 +468,30 @@ function getButtonData(button) {
 function parseResponseAndAppendToDOM(data) {
   console.log("data");
   console.log(data);
+  let current_date = new Date();
+  let time_string =
+    current_date.getHours() +
+    "-" +
+    current_date.getMinutes() +
+    "-" +
+    current_date.getSeconds() +
+    "-" +
+    current_date.getMilliseconds();
   const editorContent = document.getElementById("editor-content");
   for (const key in data) {
     const sectionContainer = document
       .getElementById("proposal-section-container")
       .cloneNode(true);
     sectionContainer.removeAttribute("id");
-    sectionContainer.id = "section-container-" + key.replace(/ /g, "-");
+    sectionContainer.id =
+      "section-container-" + key.replace(/ /g, "-") + "-" + time_string;
 
     const sectionDiv = sectionContainer.querySelector("#proposal-section");
     console.log("sectionDiv");
     console.log(sectionDiv);
 
     sectionDiv.removeAttribute("id");
-    sectionDiv.id = "section-div-" + key.replace(/ /g, "-");
+    sectionDiv.id = "section-div-" + key.replace(/ /g, "-") + "-" + time_string;
 
     const h3 = document.createElement("h3");
     h3.textContent = key;
