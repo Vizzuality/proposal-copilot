@@ -3,10 +3,13 @@ import { Ripple, initTE } from "tw-elements";
 import showdown from "showdown";
 import Quill from "quill";
 
+// Markdown converter
 const converter = new showdown.Converter();
 
+// How many questions are made in the initial analysis
 const analysisIterations = 8;
 
+// Spinning loader
 const loader = {
   show: function () {
     Alpine.store("mainMenuStore").isLoading = true;
@@ -17,11 +20,13 @@ const loader = {
   },
 };
 
+// Hide forms
 const hideInterface = function () {
   Alpine.store("mainMenuStore").showInterface("");
   console.log("hiding interface");
 };
 
+// Main document store
 Alpine.store("uploadStore", {
   showForm: false,
   title: "",
@@ -29,6 +34,7 @@ Alpine.store("uploadStore", {
     "vector_indexes/faiss_index_react_f16f6f22-65ab-4ef4-a064-acd624ebcf57",
 });
 
+// Main menu store
 Alpine.store("mainMenuStore", {
   state: "initial",
   activeInterface: "",
@@ -71,6 +77,7 @@ Alpine.store("mainMenuStore", {
   },
 });
 
+// Main menu functions
 Alpine.data("mainMenuData", () => ({
   tempFormData: null,
   docAnalyzed: false,
@@ -133,172 +140,7 @@ Alpine.data("mainMenuData", () => ({
   },
 }));
 
-// Factory for API call functions
-const apiFunctionFactory = {
-  uploadFile: function (params) {
-    const url = "/pdf-upload";
-    const formData = new FormData();
-    formData.append("file", params.file);
-
-    return fetch(url, {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.error) {
-          document.getElementById("upload-response").innerText = data["error"];
-        } else {
-          console.log(data["response"]);
-          Alpine.store("uploadStore").title = data["response"];
-          Alpine.store("uploadStore").indexName = data["vector_index"];
-          console.log(data);
-          hideInterface();
-        }
-        loader.hide();
-        return data;
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  },
-  createEmptySection: function (formId = null, formData = null) {
-    if (Alpine.store("uploadStore").indexName === "") {
-      console.log("Empty index");
-    }
-    let data = {
-      Empty: {
-        question: "Empty section",
-        response: "Edit this content",
-      },
-    };
-    console.log("Creating empty section");
-    parseResponseAndAppendToDOM(data);
-    loader.hide();
-    return;
-  },
-  analyzePDF: function (formId = null, formData = null) {
-    if (Alpine.store("uploadStore").indexName === "") {
-      console.log("Empty index");
-      loader.hide();
-      return;
-    }
-    console.log("index:");
-    console.log(Alpine.store("uploadStore").indexName);
-    loader.show();
-    if (formId && document.getElementById(formId)) {
-      const form = document.getElementById(formId);
-      formData = new FormData(form);
-      formData.append("analysis-type", "new-section");
-    } else if (!formData) {
-      formData = new FormData(); // create a new empty FormData object if no formId and no formData provided
-      console.log("I'm deleting your data");
-    }
-    formData.append("index-name", Alpine.store("uploadStore").indexName);
-    let analysisType = formData.get("analysis-type");
-    let url = "";
-    let actionTitle = "";
-
-    switch (analysisType) {
-      case "initial-analysis":
-        url = "/analyze-pdf";
-        break;
-      case "new-section":
-        url = "/analyze-pdf";
-        break;
-      case "elaborate":
-        url = "/analyze-pdf";
-        actionTitle = "Elaborated text";
-        break;
-      case "similarity":
-        url = "/similarity";
-        actionTitle = "From previous proposals";
-        break;
-      case "askGPT":
-        url = "/ask-gpt";
-        actionTitle = "Reponse from GPT";
-        break;
-      case "solve":
-        url = "/solve";
-        actionTitle = "Solved using Tree of Thoughs";
-        break;
-      default:
-        console.log("Invalid analysis type");
-    }
-
-    return fetch(url, {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.error) {
-          document.getElementById("prompt-response").innerText = data["error"];
-        } else {
-          if (
-            analysisType === "initial-analysis" ||
-            analysisType === "new-section"
-          ) {
-            parseResponseAndAppendToDOM(data);
-            console.log("new section");
-          } else {
-            data["container-div"] = formData.get("container-div");
-            data["action-title"] = actionTitle;
-            editContentInDOM(data);
-            console.log("edit section");
-          }
-        }
-        return data;
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  },
-};
-
-document.getElementById("upload-form").addEventListener("submit", function (e) {
-  e.preventDefault();
-});
-// Dragover handler to set the drop effect.
-document
-  .getElementById("upload-form")
-  .addEventListener("dragover", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    e.dataTransfer.dropEffect = "copy";
-  });
-
-// Drop handler to get the files.
-document.getElementById("upload-form").addEventListener("drop", function (e) {
-  e.preventDefault();
-  e.stopPropagation();
-  const files = e.dataTransfer.files;
-  if (files.length > 0) {
-    apiFunctionFactory.uploadFile({ file: files[0] });
-    loader.show();
-  }
-});
-
-document.getElementById("file-upload").addEventListener("change", function (e) {
-  e.preventDefault();
-  const files = e.target.files;
-  if (files.length > 0) {
-    apiFunctionFactory.uploadFile({ file: files[0] });
-    loader.show();
-  }
-});
-
-document
-  .getElementById("new-section")
-  .addEventListener("submit", function (event) {
-    console.log("submit");
-    event.preventDefault();
-    hideInterface();
-    apiFunctionFactory.analyzePDF("new-section");
-    document.getElementById("section-title").value = "";
-    document.getElementById("section-prompt").value = "";
-  });
-
+//Section menu interface
 document.addEventListener("alpine:init", () => {
   Alpine.data("sectionMenu", () => ({
     elaborate(event) {
@@ -429,6 +271,174 @@ document.addEventListener("alpine:init", () => {
   }));
 });
 
+// Factory for API call functions
+const apiFunctionFactory = {
+  uploadFile: function (params) {
+    const url = "/pdf-upload";
+    const formData = new FormData();
+    formData.append("file", params.file);
+
+    return fetch(url, {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          document.getElementById("upload-response").innerText = data["error"];
+        } else {
+          console.log(data["response"]);
+          Alpine.store("uploadStore").title = data["response"];
+          Alpine.store("uploadStore").indexName = data["vector_index"];
+          console.log(data);
+          hideInterface();
+        }
+        loader.hide();
+        return data;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  },
+  createEmptySection: function (formId = null, formData = null) {
+    if (Alpine.store("uploadStore").indexName === "") {
+      console.log("Empty index");
+    }
+    let data = {
+      Empty: {
+        question: "Empty section",
+        response: "Edit this content",
+      },
+    };
+    console.log("Creating empty section");
+    parseResponseAndAppendToDOM(data);
+    loader.hide();
+    return;
+  },
+  analyzePDF: function (formId = null, formData = null) {
+    if (Alpine.store("uploadStore").indexName === "") {
+      console.log("Empty index");
+      loader.hide();
+      return;
+    }
+    console.log("index:");
+    console.log(Alpine.store("uploadStore").indexName);
+    loader.show();
+    if (formId && document.getElementById(formId)) {
+      const form = document.getElementById(formId);
+      formData = new FormData(form);
+      formData.append("analysis-type", "new-section");
+    } else if (!formData) {
+      formData = new FormData(); // create a new empty FormData object if no formId and no formData provided
+      console.log("I'm deleting your data");
+    }
+    formData.append("index-name", Alpine.store("uploadStore").indexName);
+    let analysisType = formData.get("analysis-type");
+    let url = "";
+    let actionTitle = "";
+
+    switch (analysisType) {
+      case "initial-analysis":
+        url = "/analyze-pdf";
+        break;
+      case "new-section":
+        url = "/analyze-pdf";
+        break;
+      case "elaborate":
+        url = "/analyze-pdf";
+        actionTitle = "Elaborated text";
+        break;
+      case "similarity":
+        url = "/similarity";
+        actionTitle = "From previous proposals";
+        break;
+      case "askGPT":
+        url = "/ask-gpt";
+        actionTitle = "Reponse from GPT";
+        break;
+      case "solve":
+        url = "/solve";
+        actionTitle = "Solved using Tree of Thoughs";
+        break;
+      default:
+        console.log("Invalid analysis type");
+    }
+
+    return fetch(url, {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          document.getElementById("prompt-response").innerText = data["error"];
+        } else {
+          if (
+            analysisType === "initial-analysis" ||
+            analysisType === "new-section"
+          ) {
+            parseResponseAndAppendToDOM(data);
+            console.log("new section");
+          } else {
+            data["container-div"] = formData.get("container-div");
+            data["action-title"] = actionTitle;
+            editContentInDOM(data);
+            console.log("edit section");
+          }
+        }
+        return data;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  },
+};
+
+// Forms interface handlers
+document.getElementById("upload-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+});
+// Dragover handler to set the drop effect.
+document
+  .getElementById("upload-form")
+  .addEventListener("dragover", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = "copy";
+  });
+
+// Drop handler to get the files.
+document.getElementById("upload-form").addEventListener("drop", function (e) {
+  e.preventDefault();
+  e.stopPropagation();
+  const files = e.dataTransfer.files;
+  if (files.length > 0) {
+    apiFunctionFactory.uploadFile({ file: files[0] });
+    loader.show();
+  }
+});
+
+document.getElementById("file-upload").addEventListener("change", function (e) {
+  e.preventDefault();
+  const files = e.target.files;
+  if (files.length > 0) {
+    apiFunctionFactory.uploadFile({ file: files[0] });
+    loader.show();
+  }
+});
+
+document
+  .getElementById("new-section")
+  .addEventListener("submit", function (event) {
+    console.log("submit");
+    event.preventDefault();
+    hideInterface();
+    apiFunctionFactory.analyzePDF("new-section");
+    document.getElementById("section-title").value = "";
+    document.getElementById("section-prompt").value = "";
+  });
+
+// Miscelaneous functions
 function getButtonData(button) {
   // Get the closest ancestor div with an id that starts with "section-container-"
   const containerDiv = button.closest('div[id^="section-container-"]');
@@ -448,6 +458,7 @@ function getButtonData(button) {
   return { sectionName, textContent, containerDivId };
 }
 
+// Response paresers
 function parseResponseAndAppendToDOM(data) {
   console.log("data");
   console.log(data);
@@ -543,5 +554,8 @@ function editContentInDOM(data) {
   loader.hide();
 }
 
+// Tooltip library
 initTE({ Ripple });
+
+// Start alpine
 Alpine.start();
