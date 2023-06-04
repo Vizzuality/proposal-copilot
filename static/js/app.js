@@ -274,9 +274,6 @@ document.getElementById("upload-form").addEventListener("drop", function (e) {
   e.stopPropagation();
   const files = e.dataTransfer.files;
   if (files.length > 0) {
-    // SingletonFunction.callFunction(apiFunctionFactory.uploadFile, {
-    //   file: files[0],
-    // });
     apiFunctionFactory.uploadFile({ file: files[0] });
     loader.show();
   }
@@ -286,9 +283,6 @@ document.getElementById("file-upload").addEventListener("change", function (e) {
   e.preventDefault();
   const files = e.target.files;
   if (files.length > 0) {
-    // SingletonFunction.callFunction(apiFunctionFactory.uploadFile, {
-    //   file: files[0],
-    // });
     apiFunctionFactory.uploadFile({ file: files[0] });
     loader.show();
   }
