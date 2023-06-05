@@ -28,19 +28,19 @@ def analyze_pdf_function():
         },
         {
             "title": "Reason",
-            "prompt": "why this is needed",
+            "prompt": "why this is needed. What is themain motivation to develop this project or the problem it will solve.",
         },
         {
             "title": "Timeline",
-            "prompt": "when this is needed",
+            "prompt": "when this is needed, what are possible project phases or milestones",
         },
         {
-            "title": "Todo List",
-            "prompt": "Give me the whole list of things to do",
+            "title": "Featurest",
+            "prompt": "Give me a list of demanded features",
         },
         {
             "title": "Technical Requirements",
-            "prompt": "List any possible technical requirement",
+            "prompt": "What technologies are demanded, is there any technical requirement explicit? Add a list if so.",
         },
         {
             "title": "Risks & Caveats",
@@ -48,7 +48,7 @@ def analyze_pdf_function():
         },
         {
             "title": "Initial Platform Status",
-            "prompt": "Describe if there is current status of the platform, if there was something developed before, also posssible technologies used",
+            "prompt": "Describe what has been developed before, if there is any user research, design, or if this is a new phase over an existing product.",
         },
         {
             "title": "Special Conditions",

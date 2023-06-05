@@ -419,7 +419,7 @@ const apiFunctionFactory = {
         break;
       case "solve":
         url = "/solve";
-        actionTitle = "Solved using Tree of Thoughs";
+        actionTitle = "Solved using Tree of Thoughts";
         break;
       default:
         console.log("Invalid analysis type");

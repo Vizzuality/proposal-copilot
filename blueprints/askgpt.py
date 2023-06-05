@@ -36,7 +36,7 @@ async def send_question(prompt_obj):  # receive qa as an argument
         print(prompt_obj["prompt"])
         messages = [
             SystemMessage(
-                content="Answer with a formal and knowledgable language. Add extensive relevant content."
+                content="Answer with a formal and knowledgable language. Add extensive relevant content, provide implementation solutions and details for the text provided."
             ),
             HumanMessage(content=prompt_obj["prompt"]),
         ]
