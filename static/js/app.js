@@ -1,6 +1,7 @@
 import Alpine from "alpinejs";
 import { Ripple, initTE } from "tw-elements";
 import showdown from "showdown";
+import TurndownService from "turndown";
 import Quill from "quill";
 
 // Markdown converter
@@ -684,16 +685,16 @@ function editContentInDOM(data) {
 function generateProposalJson() {
   let editorContentDivs = document.querySelectorAll("#editor-content .prose");
   let proposalJson = {};
-
+  let turndownService = new TurndownService();
   editorContentDivs.forEach((div) => {
     let key = div.id
       .replace("section-div-", "")
-      .replace(/-\d{2}-\d{2}-\d{2}-\d{3}$/, ""); // Remove 'section-div-' prefix and timestamp suffix from the ID
-    let response = div.textContent.trim(); // Get the text content of the div and remove any leading/trailing whitespace
-
+      .replace(/-\d{2}-\d{2}-\d{2}-\d{3}$/, "")
+      .replace(/-/g, " ");
+    let markdownResponse = turndownService.turndown(div);
     proposalJson[key] = {
       question: "none",
-      response: response,
+      response: markdownResponse,
     };
   });
 
