@@ -601,7 +601,7 @@ function parseGeneralDataAndAppendToDOM(data) {
   }
 }
 
-function parseResponseAndAppendToDOM(data) {
+function parseResponseAndAppendToDOM(data, fromRecovery = false) {
   console.log(data);
   let current_date = new Date();
   let time_string =
@@ -632,7 +632,11 @@ function parseResponseAndAppendToDOM(data) {
     const markdownText = data[key]["response"];
     const htmlText = converter.makeHtml(markdownText);
 
-    sectionDiv.innerHTML = h3.outerHTML + htmlText;
+    if (fromRecovery === true) {
+      sectionDiv.innerHTML = htmlText;
+    } else {
+      sectionDiv.innerHTML = h3.outerHTML + htmlText;
+    }
 
     editorContent.appendChild(sectionContainer);
   }
@@ -700,6 +704,16 @@ function generateProposalJson() {
 
   return proposalJson;
 }
+
+window.loadProposal = function () {
+  let proposalJson = generateProposalJson();
+
+  for (let key in proposalJson) {
+    let dataObject = {};
+    dataObject[key] = proposalJson[key];
+    parseResponseAndAppendToDOM(dataObject, true);
+  }
+};
 
 // Tooltip library
 initTE({ Ripple });
