@@ -56,7 +56,8 @@ Alpine.store("proposalStore", {
   month: monthNames[date.getMonth()],
   showForm: false,
   indexName:
-    "vector_indexes/faiss_index_react_f16f6f22-65ab-4ef4-a064-acd624ebcf57",
+    "storage/vector_indexes/faiss_index_react_f16f6f22-65ab-4ef4-a064-acd624ebcf57",
+  "proposal-uid": "",
 
   updateField(key, value) {
     this[key] = value;
@@ -162,12 +163,9 @@ Alpine.data("mainMenuData", () => ({
   openDocument() {
     console.log("open document");
   },
-  saveToJSON() {
+  saveProposalJson() {
     console.log("saving document");
-    Alpine.store("proposalStore").proposalJson = generateProposalJson();
-    let proposalStore = Alpine.store("proposalStore");
-    let proposalStoreJson = JSON.stringify(proposalStore);
-    console.log(proposalStoreJson);
+    apiFunctionFactory.saveProposal();
   },
   copyToClipboard() {
     var textToCopy = document.getElementById("editor-content").innerText;
@@ -441,6 +439,28 @@ const apiFunctionFactory = {
         );
       });
   },
+  saveProposal: function () {
+    console.log("saving proposal");
+    const url = "/save-proposal";
+    const data = proposalToJson();
+    console.log(data);
+    return fetch(url, {
+      method: "POST",
+      body: data,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          document.getElementById("upload-response").innerText = data["error"];
+          Alpine.store("messageStore").setMessage(
+            "Sorry, I couldn't save the proposal: " + data["error"],
+            "error"
+          );
+        } else {
+          console.log("saved proposal");
+        }
+      });
+  },
   createEmptySection: function (formId = null, formData = null) {
     if (Alpine.store("proposalStore").indexName === "") {
       Alpine.store("messageStore").setMessage(
@@ -623,7 +643,6 @@ function parseGeneralDataAndAppendToDOM(data) {
 }
 
 function parseResponseAndAppendToDOM(data, fromRecovery = false) {
-  console.log(data);
   let current_date = new Date();
   let time_string =
     current_date.getHours() +
@@ -707,7 +726,7 @@ function editContentInDOM(data) {
   loader.hide();
 }
 
-function generateProposalJson() {
+function proposalToJson() {
   let editorContentDivs = document.querySelectorAll("#editor-content .prose");
   let proposalJson = {};
   let turndownService = new TurndownService();
@@ -722,12 +741,15 @@ function generateProposalJson() {
       response: markdownResponse,
     };
   });
-
-  return proposalJson;
+  console.log(proposalJson);
+  Alpine.store("proposalStore").proposalJson = proposalJson;
+  let proposalStore = Alpine.store("proposalStore");
+  let proposalStoreJson = JSON.stringify(proposalStore);
+  return proposalStoreJson;
 }
 
 window.loadProposal = function () {
-  let proposalJson = generateProposalJson();
+  let proposalJson = Alpine.store("proposalStore").proposalJson;
 
   for (let key in proposalJson) {
     let dataObject = {};

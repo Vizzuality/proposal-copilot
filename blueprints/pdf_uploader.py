@@ -44,10 +44,10 @@ async def pdf_upload():
         docs = text_splitter.split_documents(documents=documents)
         embeddings = OpenAIEmbeddings()
         uid = uuid.uuid4()
-        dir_name = "vector_indexes"
+        dir_name = "storage/vector_indexes"
         if not os.path.exists(dir_name):
             os.makedirs(dir_name)
-        index_name = f"vector_indexes/faiss_index_react_{uid}"
+        index_name = f"storage/vector_indexes/faiss_index_react_{uid}"
         vectorstore = FAISS.from_documents(docs, embeddings)
         vectorstore.save_local(index_name)
 
