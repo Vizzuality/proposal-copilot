@@ -263,6 +263,27 @@ Alpine.data("mainMenuData", () => ({
 document.addEventListener("alpine:init", () => {
   Alpine.data("sectionMenu", () => ({
     quillIsActive: false,
+    copyToClipboard(event) {
+      event.preventDefault();
+      const buttonData = getButtonData(event.target);
+      let div = buttonData.containerDiv.querySelector(".prose");
+      console.log(div);
+      var textToCopy = div.innerText;
+      navigator.clipboard.writeText(textToCopy).then(
+        function () {
+          Alpine.store("messageStore").setMessage(
+            "Text copied to the clipboard.",
+            "info"
+          );
+        },
+        function (err) {
+          Alpine.store("messageStore").setMessage(
+            "Could not copy text: " + err,
+            "error"
+          );
+        }
+      );
+    },
     elaborate(event) {
       event.preventDefault();
       const buttonData = getButtonData(event.target);
@@ -587,7 +608,7 @@ function getButtonData(button) {
   const sectionName = containerDiv.id.slice("section-container-".length);
   const textContent = containerDiv.innerText;
 
-  return { sectionName, textContent, containerDivId };
+  return { sectionName, textContent, containerDivId, containerDiv };
 }
 
 // Response paresers
