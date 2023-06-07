@@ -6,8 +6,10 @@ import Quill from "quill";
 // Markdown converter
 const converter = new showdown.Converter();
 
-// How many questions are made in the initial analysis
-const analysisIterations = 8;
+let docAnalyzed = false;
+let docDataAnalyzed = false;
+const analysisIterations = 9;
+const dataAnalysisIterations = 6;
 
 // Spinning loader
 const loader = {
@@ -25,11 +27,46 @@ const hideInterface = function () {
 };
 
 // Main document store
-Alpine.store("uploadStore", {
+Alpine.store("proposalStore", {
   showForm: false,
   title: "",
   indexName:
     "vector_indexes/faiss_index_react_f16f6f22-65ab-4ef4-a064-acd624ebcf57",
+});
+
+// Proposal store
+let monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+let date = new Date();
+Alpine.store("proposalStore", {
+  "proposal-title": "",
+  "client-name": "",
+  "project-name": "",
+  "client-main-goal": "",
+  "project-main-outcome": "",
+  "goal-of-the-project": "",
+  "type-of-information": "",
+  "expected-time-in-weeks": "",
+  month: monthNames[date.getMonth()],
+  showForm: false,
+  indexName:
+    "vector_indexes/faiss_index_react_f16f6f22-65ab-4ef4-a064-acd624ebcf57",
+
+  updateField(key, value) {
+    this[key] = value;
+  },
 });
 
 // Message store
@@ -93,6 +130,9 @@ Alpine.store("mainMenuStore", {
         case "interface2":
           this.state = "state2";
           break;
+        case "generalData":
+          this.state = "generalDataInterface";
+          break;
         case "uploadForm":
           this.state = "uploadForm";
           break;
@@ -124,7 +164,7 @@ Alpine.store("mainMenuStore", {
 // Main menu functions
 Alpine.data("mainMenuData", () => ({
   tempFormData: null,
-  docAnalyzed: false,
+
   openDocument() {
     console.log("open document");
   },
@@ -145,9 +185,9 @@ Alpine.data("mainMenuData", () => ({
       }
     );
   },
-  analyzeDocument() {
+  getGeneralData() {
     loader.show();
-    if (Alpine.store("uploadStore").indexName === "") {
+    if (Alpine.store("proposalStore").indexName === "") {
       Alpine.store("messageStore").setMessage(
         "Please, upload a document first.",
         "error"
@@ -155,7 +195,37 @@ Alpine.data("mainMenuData", () => ({
       loader.hide();
       return;
     }
-    if (this.docAnalyzed == false) {
+    if (docDataAnalyzed == false) {
+      for (let i = 0; i <= dataAnalysisIterations; i++) {
+        setTimeout(() => {
+          Alpine.store("messageStore").setMessage(
+            "Analyzing document, this will take a moment.",
+            "info"
+          );
+
+          this.tempFormData = new FormData();
+          this.tempFormData.append("analysis-type", "general-data");
+          this.tempFormData.append("iteration", i);
+
+          apiFunctionFactory.analyzePDF(null, this.tempFormData);
+          if (i == dataAnalysisIterations) {
+            docDataAnalyzed = true;
+          }
+        }, 1000 * i); // wait i seconds before executing
+      }
+    }
+  },
+  analyzeDocument() {
+    loader.show();
+    if (Alpine.store("proposalStore").indexName === "") {
+      Alpine.store("messageStore").setMessage(
+        "Please, upload a document first.",
+        "error"
+      );
+      loader.hide();
+      return;
+    }
+    if (docAnalyzed == false) {
       for (let i = 0; i <= analysisIterations; i++) {
         setTimeout(() => {
           Alpine.store("messageStore").setMessage(
@@ -169,7 +239,7 @@ Alpine.data("mainMenuData", () => ({
 
           apiFunctionFactory.analyzePDF(null, this.tempFormData);
           if (i == analysisIterations) {
-            this.docAnalyzed = true;
+            docAnalyzed = true;
           }
         }, 1000 * i); // wait i seconds before executing
       }
@@ -177,18 +247,10 @@ Alpine.data("mainMenuData", () => ({
   },
   createEmpty() {
     loader.show();
-    if (Alpine.store("uploadStore").indexName === "") {
-      Alpine.store("messageStore").setMessage(
-        "Please, upload a document first",
-        "error"
-      );
-      loader.hide();
-      return;
-    }
-
     this.tempFormData = new FormData();
     this.tempFormData.append("analysis-type", "empty-section");
     apiFunctionFactory.createEmptySection(null, this.tempFormData);
+    loader.hide();
   },
 
   newDocument() {
@@ -343,8 +405,8 @@ const apiFunctionFactory = {
             "error"
           );
         } else {
-          Alpine.store("uploadStore").title = data["response"];
-          Alpine.store("uploadStore").indexName = data["vector_index"];
+          Alpine.store("proposalStore")["project-name"] = data["response"];
+          Alpine.store("proposalStore").indexName = data["vector_index"];
           hideInterface();
         }
         loader.hide();
@@ -358,7 +420,7 @@ const apiFunctionFactory = {
       });
   },
   createEmptySection: function (formId = null, formData = null) {
-    if (Alpine.store("uploadStore").indexName === "") {
+    if (Alpine.store("proposalStore").indexName === "") {
       Alpine.store("messageStore").setMessage(
         "Please, upload a document first",
         "error"
@@ -376,7 +438,7 @@ const apiFunctionFactory = {
     return;
   },
   analyzePDF: function (formId = null, formData = null) {
-    if (Alpine.store("uploadStore").indexName === "") {
+    if (Alpine.store("proposalStore").indexName === "") {
       Alpine.store("messageStore").setMessage(
         "Please, upload a document first",
         "error"
@@ -393,7 +455,7 @@ const apiFunctionFactory = {
       formData = new FormData(); // create a new empty FormData object if no formId and no formData provided
       console.log("I'm deleting your data");
     }
-    formData.append("index-name", Alpine.store("uploadStore").indexName);
+    formData.append("index-name", Alpine.store("proposalStore").indexName);
     let analysisType = formData.get("analysis-type");
     let url = "";
     let actionTitle = "";
@@ -417,6 +479,9 @@ const apiFunctionFactory = {
         url = "/ask-gpt";
         actionTitle = "Reponse from GPT";
         break;
+      case "general-data":
+        url = "/analyze-pdf";
+        break;
       case "solve":
         url = "/solve";
         actionTitle = "Solved using Tree of Thoughts";
@@ -438,7 +503,9 @@ const apiFunctionFactory = {
             "error"
           );
         } else {
-          if (
+          if (analysisType === "general-data") {
+            parseGeneralDataAndAppendToDOM(data);
+          } else if (
             analysisType === "initial-analysis" ||
             analysisType === "new-section"
           ) {
@@ -523,6 +590,17 @@ function getButtonData(button) {
 }
 
 // Response paresers
+function parseGeneralDataAndAppendToDOM(data) {
+  console.log(data);
+  for (const key in data) {
+    if (data.hasOwnProperty(key) && data[key].hasOwnProperty("response")) {
+      console.log(key + ": " + data[key]["response"]);
+      Alpine.store("proposalStore")[key] = data[key]["response"];
+    }
+    loader.hide();
+  }
+}
+
 function parseResponseAndAppendToDOM(data) {
   let current_date = new Date();
   let time_string =

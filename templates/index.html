@@ -20,7 +20,7 @@
     x-init="console.log('I\'m being initialized!')"
   >
     <div class="h-screen">
-      <nav class="bg-black sticky block top-0 z-[1000]">
+      <nav class="bg-black sticky block top-0 z-[1000']">
         <div class="px-4 sm:px-6 lg:px-8">
           <div class="flex h-16 items-center justify-between">
             <div class="flex items-center">
@@ -39,12 +39,12 @@
                 <div
                   id="project-title"
                   class="inline-flex text-center"
-                  x-show="!$store.uploadStore.showForm"
+                  x-show="!$store.proposalStore.showForm"
                 >
                   <p class="text-sm leading-6 mx-4 text-white">
                     <span
                       class="font-semibold"
-                      x-text="$store.uploadStore.title"
+                      x-text="$store.proposalStore['project-name']"
                     ></span>
                   </p>
                 </div>
@@ -130,6 +130,63 @@
                       />
                     </svg>
                     <span class="sr-only">Open</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'uploadForm' }"
+                    @click="$store.mainMenuStore.showInterface('uploadForm')"
+                    href="#"
+                    class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                    data-te-toggle="tooltip"
+                    title="Upload document"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12l-3-3m0 0l-3 3m3-3v6m-1.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                      />
+                    </svg>
+
+                    <span class="sr-only">Upload</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    x-data="mainMenuData()"
+                    x-on:click.once.prevent="getGeneralData"
+                    id="generalDataButton"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'generalData' }"
+                    @click="$store.mainMenuStore.showInterface('generalDataInterface')"
+                    href="#"
+                    class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                    data-te-toggle="tooltip"
+                    title="Get general data"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
+                      />
+                    </svg>
+
+                    <span class="sr-only">General data</span>
                   </a>
                 </li>
                 <li>
@@ -593,6 +650,136 @@
           <!-- content space -->
           <div class="container-isolator flex">
             <div class="editor bg-white flex-grow">
+              <div
+                class="p-10"
+                id="proposal-fields"
+                x-data="{
+                  'proposal-title': '',
+                  'client-name': '',
+                  'project-name': '',
+                  'client-main-goal': '',
+                  'project-main-outcome': '',
+                  'goal-of-the-project': '',
+                  'type-of-information': '',
+                  'expected-time-in-weeks': ''
+                }"
+              >
+                <div class="flex flex-wrap -m-2">
+                  <div class="w-1/2 p-2">
+                    <label
+                      for="proposal-title"
+                      class="block text-sm font-medium text-gray-700"
+                      >Proposal Title</label
+                    >
+                    <input
+                      x-data
+                      x-model="$store.proposalStore['proposal-title']"
+                      type="text"
+                      id="proposal-title"
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-gray-900 text-sm"
+                    />
+                  </div>
+                  <div class="w-1/2 p-2">
+                    <label
+                      for="client-name"
+                      class="block text-sm font-medium text-gray-700"
+                      >Client Name</label
+                    >
+                    <input
+                      x-data
+                      x-model="$store.proposalStore['client-name']"
+                      type="text"
+                      id="client-name"
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-gray-900 text-sm"
+                    />
+                  </div>
+                  <div class="w-1/2 p-2">
+                    <label
+                      for="project-name"
+                      class="block text-sm font-medium text-gray-700"
+                      >Project Name</label
+                    >
+                    <input
+                      x-data
+                      x-model="$store.proposalStore['project-name']"
+                      type="text"
+                      id="project-name"
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-gray-900 text-sm"
+                    />
+                  </div>
+                  <div class="w-1/2 p-2">
+                    <label
+                      for="client-main-goal"
+                      class="block text-sm font-medium text-gray-700"
+                      >Client Main Goal</label
+                    >
+                    <input
+                      x-data
+                      x-model="$store.proposalStore['client-main-goal']"
+                      type="text"
+                      id="client-main-goal"
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-gray-900 text-sm"
+                    />
+                  </div>
+                  <div class="w-1/2 p-2">
+                    <label
+                      for="project-main-outcome"
+                      class="block text-sm font-medium text-gray-700"
+                      >Project Main Outcome</label
+                    >
+                    <input
+                      x-data
+                      x-model="$store.proposalStore['project-main-outcome']"
+                      type="text"
+                      id="project-main-outcome"
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-gray-900 text-sm"
+                    />
+                  </div>
+                  <div class="w-1/2 p-2">
+                    <label
+                      for="goal-of-the-project"
+                      class="block text-sm font-medium text-gray-700"
+                      >Goal of the Project</label
+                    >
+                    <input
+                      x-data
+                      x-model="$store.proposalStore['goal-of-the-project']"
+                      type="text"
+                      id="goal-of-the-project"
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-gray-900 text-sm"
+                    />
+                  </div>
+                  <div class="w-1/2 p-2">
+                    <label
+                      for="type-of-information"
+                      class="block text-sm font-medium text-gray-700"
+                      >Type of Information</label
+                    >
+                    <input
+                      x-data
+                      x-model="$store.proposalStore['type-of-information']"
+                      type="text"
+                      id="type-of-information"
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-gray-900 text-sm"
+                    />
+                  </div>
+                  <div class="w-1/2 p-2">
+                    <label
+                      for="expected-time-in-weeks"
+                      class="block text-sm font-medium text-gray-700"
+                      >Expected Time in Weeks</label
+                    >
+                    <input
+                      x-data
+                      x-model="$store.proposalStore['expected-time-in-weeks']"
+                      type="text"
+                      id="expected-time-in-weeks"
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-gray-900 text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div
                 class="editor-content block h-screen overflow-y-auto rounded-md border-0"
                 id="editor-content"
