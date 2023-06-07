@@ -26,14 +26,6 @@ const hideInterface = function () {
   Alpine.store("mainMenuStore").showInterface("");
 };
 
-// Main document store
-Alpine.store("proposalStore", {
-  showForm: false,
-  title: "",
-  indexName:
-    "vector_indexes/faiss_index_react_f16f6f22-65ab-4ef4-a064-acd624ebcf57",
-});
-
 // Proposal store
 let monthNames = [
   "January",
@@ -59,6 +51,7 @@ Alpine.store("proposalStore", {
   "goal-of-the-project": "",
   "type-of-information": "",
   "expected-time-in-weeks": "",
+  proposalJson: "",
   month: monthNames[date.getMonth()],
   showForm: false,
   indexName:
@@ -170,7 +163,7 @@ Alpine.data("mainMenuData", () => ({
   },
   saveToJSON() {
     console.log("saving document");
-
+    Alpine.store("proposalStore").proposalJson = generateProposalJson();
     let proposalStore = Alpine.store("proposalStore");
     let proposalStoreJson = JSON.stringify(proposalStore);
     console.log(proposalStoreJson);
@@ -601,7 +594,6 @@ function parseGeneralDataAndAppendToDOM(data) {
   console.log(data);
   for (const key in data) {
     if (data.hasOwnProperty(key) && data[key].hasOwnProperty("response")) {
-      console.log(key + ": " + data[key]["response"]);
       Alpine.store("proposalStore")[key] = data[key]["response"];
     }
     loader.hide();
@@ -609,6 +601,7 @@ function parseGeneralDataAndAppendToDOM(data) {
 }
 
 function parseResponseAndAppendToDOM(data) {
+  console.log(data);
   let current_date = new Date();
   let time_string =
     current_date.getHours() +
@@ -686,6 +679,25 @@ function editContentInDOM(data) {
     "info"
   );
   loader.hide();
+}
+
+function generateProposalJson() {
+  let editorContentDivs = document.querySelectorAll("#editor-content .prose");
+  let proposalJson = {};
+
+  editorContentDivs.forEach((div) => {
+    let key = div.id
+      .replace("section-div-", "")
+      .replace(/-\d{2}-\d{2}-\d{2}-\d{3}$/, ""); // Remove 'section-div-' prefix and timestamp suffix from the ID
+    let response = div.textContent.trim(); // Get the text content of the div and remove any leading/trailing whitespace
+
+    proposalJson[key] = {
+      question: "none",
+      response: response,
+    };
+  });
+
+  return proposalJson;
 }
 
 // Tooltip library
