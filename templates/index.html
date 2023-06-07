@@ -334,6 +334,8 @@
                 <li>
                   <a
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state8' }"
+                    x-data="mainMenuData()"
+                    @click.prevent="saveToJSON"
                     @click="$store.mainMenuStore.showInterface('interface8')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"

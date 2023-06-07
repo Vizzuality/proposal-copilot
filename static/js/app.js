@@ -168,6 +168,13 @@ Alpine.data("mainMenuData", () => ({
   openDocument() {
     console.log("open document");
   },
+  saveToJSON() {
+    console.log("saving document");
+
+    let proposalStore = Alpine.store("proposalStore");
+    let proposalStoreJson = JSON.stringify(proposalStore);
+    console.log(proposalStoreJson);
+  },
   copyToClipboard() {
     var textToCopy = document.getElementById("editor-content").innerText;
     navigator.clipboard.writeText(textToCopy).then(
