@@ -38,7 +38,7 @@ def save_json():
             json.dump(proposal_json, file)
 
         return (
-            jsonify({"message": "File saved successfully.", "proposal-uid": filename}),
+            jsonify({"message": "File saved successfully.", "proposal_uid": filename}),
             200,
         )
 

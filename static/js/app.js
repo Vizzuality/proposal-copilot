@@ -458,6 +458,9 @@ const apiFunctionFactory = {
           );
         } else {
           console.log("saved proposal");
+          console.log(data);
+          Alpine.store("proposalStore")["proposal-uid"] = data.proposal_uid;
+          console.log(Alpine.store("proposalStore")["proposal-uid"]);
         }
       });
   },
