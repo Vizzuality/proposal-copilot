@@ -460,7 +460,13 @@ const apiFunctionFactory = {
           console.log("saved proposal");
           console.log(data);
           Alpine.store("proposalStore")["proposal-uid"] = data.proposal_uid;
-          console.log(Alpine.store("proposalStore")["proposal-uid"]);
+          Alpine.store("messageStore").setMessage(
+            "Proposal " +
+              Alpine.store("proposalStore")["project-name"] +
+              " saved succesfully",
+            "info"
+          );
+          console.log(Alpine.store("store")["proposal-uid"]);
         }
       });
   },
