@@ -11,3 +11,9 @@ werkzeug
 pinecone-client
 tree-of-thoughts
 torch
+Flask-Dance
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
+flask_login
