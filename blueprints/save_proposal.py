@@ -18,7 +18,7 @@ def save_json():
         proposal_uid = proposal_json.get("proposal-uid")
 
         if not project_name:
-            raise ValueError("Missing 'project-name' in the request body.")
+            raise ValueError("Missing 'project name' Analyze or write a project name.")
 
         if not proposal_uid:
             proposal_uid = uuid.uuid4()
