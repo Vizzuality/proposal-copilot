@@ -145,6 +145,8 @@ Alpine.store("mainMenuStore", {
           break;
         case "interface8":
           this.state = "state8";
+        case "createDoc":
+          this.state = "createDocInterface";
           break;
         case "interface9":
           this.state = "state9";
@@ -167,6 +169,40 @@ Alpine.data("mainMenuData", () => ({
     console.log("saving document");
     apiFunctionFactory.saveProposal();
   },
+  createDoc() {
+    console.log("creating doc");
+    apiFunctionFactory
+      .saveProposal()
+      .then(() => {
+        let proposalStoreJson = JSON.stringify(Alpine.store("proposalStore"));
+        const url = "/create-doc";
+        const data = proposalStoreJson;
+        console.log(data);
+        return fetch(url, {
+          method: "POST",
+          body: data,
+        });
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          document.getElementById("upload-response").innerText = data["error"];
+          Alpine.store("messageStore").setMessage(
+            "Sorry, I couldn't create the doc: " + data["error"],
+            "error"
+          );
+          throw new Error("Error creating the document."); // throw an error to stop execution
+        } else {
+          console.log("Post-save operations");
+        }
+      })
+      .catch((error) => {
+        // Catch any error
+        console.error("Error:", error);
+        // Handle error here
+      });
+  },
+
   copyToClipboard() {
     var textToCopy = document.getElementById("editor-content").innerText;
     navigator.clipboard.writeText(textToCopy).then(
@@ -456,6 +492,7 @@ const apiFunctionFactory = {
             "Sorry, I couldn't save the proposal: " + data["error"],
             "error"
           );
+          throw new Error("Error saving the proposal.");
         } else {
           console.log("saved proposal");
           console.log(data);
@@ -466,7 +503,7 @@ const apiFunctionFactory = {
               " saved succesfully",
             "info"
           );
-          console.log(Alpine.store("store")["proposal-uid"]);
+          console.log(Alpine.store("proposalStore")["proposal-uid"]);
         }
       });
   },
