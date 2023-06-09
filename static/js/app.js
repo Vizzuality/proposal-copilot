@@ -67,7 +67,7 @@ Alpine.store("proposalStore", {
 // Message store
 Alpine.store("messageStore", {
   message: "",
-  messageType: "", // this will be either 'error' or 'info'
+  messageType: "",
   displayMessage: false,
   setMessage(message, type) {
     this.message = message;
@@ -193,6 +193,12 @@ Alpine.data("mainMenuData", () => ({
           );
           throw new Error("Error creating the document."); // throw an error to stop execution
         } else {
+          Alpine.store("messageStore").setMessage(
+            `View your document: <a href="` +
+              data["document_id"] +
+              `" target="_blank"> Here </a>`,
+            "success"
+          );
           console.log("Post-save operations");
         }
       })

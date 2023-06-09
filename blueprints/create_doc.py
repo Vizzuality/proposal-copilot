@@ -115,7 +115,10 @@ def create_doc_function():
         .batchUpdate(documentId=document_id, body={"requests": requests})
         .execute()
     )
-    return jsonify({"document_id": document_id}), 200
+    return (
+        jsonify({"document_id": f"https://docs.google.com/document/d/{document_id}"}),
+        200,
+    )
 
 
 def remove_markdown(md):

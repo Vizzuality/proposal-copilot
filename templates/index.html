@@ -408,12 +408,12 @@
                 x-transition:leave="transition ease-in duration-700"
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
-                :class="{'bg-red-600': $store.messageStore.messageType === 'error', 'bg-pink-600': $store.messageStore.messageType === 'info'}"
+                :class="{'bg-red-600': $store.messageStore.messageType === 'error', 'bg-pink-600': $store.messageStore.messageType === 'info', 'bg-gray-900': $store.messageStore.messageType === 'success'}"
                 class="message-div flex flex-col items-center justify-center relative"
               >
                 <div
                   class="close-container absolute top-0 right-2"
-                  x-show="$store.messageStore.messageType === 'error'"
+                  x-show="$store.messageStore.messageType === 'error' || $store.messageStore.messageType === 'success'"
                 >
                   <a
                     @click="$store.messageStore.closeMessage()"
@@ -438,7 +438,7 @@
                 </div>
                 <p
                   class="text-white text-xs text-center"
-                  x-text="$store.messageStore.message"
+                  x-html="$store.messageStore.message"
                 >
                   <!-- The message will be displayed here -->
                 </p>
