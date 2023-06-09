@@ -69,7 +69,6 @@ def google_logged_in(blueprint, token):
 
     db.session.add(oauth)
     db.session.commit()
-    print(f"Stored token: {oauth.token}")
     login_user(user)
 
 

@@ -28,10 +28,10 @@ def create_doc_function():
         token=token["access_token"],
         refresh_token=token.get("refresh_token", None),
         id_token=token.get("id_token", None),
-        token_uri="https://accounts.google.com/o/oauth2/token",  # token_uri for Google OAuth2
-        client_id=None,  # not necessary for the operation
+        token_uri="https://accounts.google.com/o/oauth2/token",
+        client_id=None,
         client_secret=None,
-    )  # not necessary for the operation
+    )
 
     # If the credentials are expired and a refresh token is available, refresh the credentials
     if creds.expired and creds.refresh_token:
@@ -42,6 +42,7 @@ def create_doc_function():
 
     # Extract data from JSON request
     proposal_json = request.get_json(force=True)
+    print(f"Received proposal JSON: {proposal_json}")
 
     # Keys to extract from the JSON
     keys = [
@@ -54,19 +55,27 @@ def create_doc_function():
         "goal-of-the-project",
         "type-of-information",
         "expected-time-in-weeks",
-        "document-body",
     ]
 
     # Populate variables dictionary and create document body
     variables = {}
     proposal_dict = proposal_json.get("proposalJson")
     if proposal_dict:
+        print(f"Proposal dictionary: {proposal_dict}")
         document_body = "\n\n".join(
             remove_markdown(item["response"])
             for item in proposal_dict.values()
             if "response" in item
         )
-        variables["proposalJson"] = document_body
+        document_body_paragraphs = document_body.split("\n\n")
+    else:
+        document_body_paragraphs = []
+
+    # Fill up the remaining with empty strings if less than 50
+    document_body_paragraphs += [""] * (50 - len(document_body_paragraphs))
+
+    for i, paragraph in enumerate(document_body_paragraphs):
+        variables[f"document-body-{i+1}"] = paragraph
 
     for key in keys:
         variables[key] = proposal_json.get(key)
