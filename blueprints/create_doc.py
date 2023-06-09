@@ -1,5 +1,5 @@
 from googleapiclient.discovery import build
-from flask import Blueprint, redirect, url_for, session, jsonify
+from flask import Blueprint, redirect, url_for, session, jsonify, request
 from googleapiclient.errors import HttpError
 from google.auth.transport.requests import Request
 from flask_dance.contrib.google import google
@@ -7,6 +7,7 @@ from config import template_doc_id as template_doc_id
 from google.oauth2.credentials import Credentials
 from google.oauth2.credentials import Credentials
 from google.auth.exceptions import RefreshError
+import re
 
 create_doc = Blueprint("create_doc", __name__)
 
@@ -29,6 +30,51 @@ def create_doc_function():
         except RefreshError as e:
             return jsonify({"error": "Access token could not be refreshed"}), 401
 
+    # Extract data from JSON request
+    proposal_json = request.get_json(force=True)
+
+    # Keys to extract from the JSON
+    keys = [
+        "month",
+        "project-name",
+        "project-title",
+        "client-main-goal",
+        "client-name",
+        "project-main-outcome",
+        "goal-of-the-project",
+        "type-of-information",
+        "expected-time-in-weeks",
+        "document-body",
+    ]
+
+    # Populate variables dictionary and create document body
+    variables = {}
+    proposal_dict = proposal_json.get("proposalJson")
+    if proposal_dict:
+        document_body = "\n\n".join(
+            remove_markdown(item["response"])
+            for item in proposal_dict.values()
+            if "response" in item
+        )
+        variables["proposalJson"] = document_body
+
+    for key in keys:
+        variables[key] = proposal_json.get(key)
+
+    # Create requests array
+    requests = [
+        {
+            "replaceAllText": {
+                "containsText": {
+                    "text": "{{" + var + "}}",
+                    "matchCase": "true",
+                },
+                "replaceText": value,
+            }
+        }
+        for var, value in variables.items()
+    ]
+
     docs_service = build("docs", "v1", credentials=creds)
 
     # ID of the Google Docs document to be copied
@@ -36,7 +82,7 @@ def create_doc_function():
 
     # Make a copy of the template document
     try:
-        copy_title = "My New Document"
+        copy_title = proposal_json.get("project-name")
         body = {"name": copy_title}
         drive_service = build("drive", "v3", credentials=creds)
         copied_doc = drive_service.files().copy(fileId=DOCUMENT_ID, body=body).execute()
@@ -45,32 +91,18 @@ def create_doc_function():
     except HttpError as error:
         print(f"An error has occurred: {error}")
 
-    # Now, let's say you want to replace some placeholders in the copied doc.
-    # You can use the BatchUpdate method for this.
-
-    requests = [
-        {
-            "replaceAllText": {
-                "containsText": {
-                    "text": "{{var1}}",
-                    "matchCase": "true",
-                },
-                "replaceText": "Replacement for var1",
-            }
-        },
-        {
-            "replaceAllText": {
-                "containsText": {
-                    "text": "{{var2}}",
-                    "matchCase": "true",
-                },
-                "replaceText": "Replacement for var2",
-            }
-        },
-    ]
-
     result = (
         docs_service.documents()
         .batchUpdate(documentId=document_id, body={"requests": requests})
         .execute()
     )
+    return jsonify({"document_id": document_id}), 200
+
+
+def remove_markdown(md):
+    md = re.sub(r"#.*\n", "", md)
+    md = re.sub(r"\[.*\]\(.*\)", "", md)
+    md = re.sub(r"\*.*\*", "", md)
+    md = re.sub(r"`.*`", "", md)
+    md = md.replace("\n", " ")
+    return md

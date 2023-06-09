@@ -2,7 +2,8 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-
+SQLALCHEMY_DATABASE_URI = "sqlite:///app.db"
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 openai_api_key = os.getenv("OPENAI_API_KEY")
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = os.getenv(
     "OAUTHLIB_INSECURE_TRANSPORT", "1"

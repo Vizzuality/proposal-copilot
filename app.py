@@ -1,6 +1,9 @@
 import os
 
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
 
 from blueprints.routes import routes
 from blueprints.pdf_uploader import pdf_uploader
@@ -15,6 +18,11 @@ from config import openai_api_key as openai_api_key
 from config import secret_key as secret_key
 
 app = Flask(__name__)
+app.config.from_pyfile("config.py")
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
 app.secret_key = secret_key
 app.config["ENV"] = os.environ.get("FLASK_ENV", "production")
 app.register_blueprint(routes)

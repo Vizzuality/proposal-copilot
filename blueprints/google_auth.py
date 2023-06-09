@@ -71,6 +71,10 @@ def google_logged_in(blueprint, token):
         "client_id": blueprint.client_id,
         "client_secret": blueprint.client_secret,
     }
+
+    print("Google token")
+    print(f"Token info: {session['google_token']}")
+
     return redirect(url_for("routes.index"))
 
 
