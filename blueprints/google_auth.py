@@ -1,23 +1,17 @@
 from flask import Blueprint, redirect, url_for, session, flash
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.consumer import oauth_authorized, oauth_error
-from flask_login import login_user, UserMixin, LoginManager, logout_user
+from flask_dance.consumer.storage.sqla import SQLAlchemyStorage
+from flask_login import login_user, UserMixin, LoginManager, logout_user, current_user
 from config import google_id as google_id
 from config import google_secret as google_secret
 from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
+from models import db, User, OAuth
 
+google_auth = Blueprint("google_auth", __name__)
 
 login_manager = LoginManager()
 
-
-# User class without database
-class User(UserMixin):
-    def __init__(self, id, email):
-        self.id = id
-        self.email = email
-
-
-google_auth = Blueprint("google_auth", __name__)
 
 google_bp = make_google_blueprint(
     client_id=google_id,
@@ -28,6 +22,7 @@ google_bp = make_google_blueprint(
         "openid",
         "https://www.googleapis.com/auth/drive",
     ],
+    storage=SQLAlchemyStorage(OAuth, db.session, user=current_user),
 )
 
 
@@ -39,13 +34,7 @@ def logout():
 
 @login_manager.user_loader
 def load_user(user_id):
-    user = session.get("user")
-    if user is not None and user.get("id") == user_id:
-        return User(
-            id=user["id"],
-            email=user["email"],
-        )
-    return None
+    return User.query.get(user_id)
 
 
 @oauth_authorized.connect_via(google_bp)
@@ -60,22 +49,28 @@ def google_logged_in(blueprint, token):
         return False
 
     user_data = resp.json()
-    user = User(id=user_data["id"], email=user_data["email"])
+    user = User.query.filter_by(id=user_data["id"]).first()
+
+    if not user:
+        user = User(id=user_data["id"], email=user_data["email"])
+        db.session.add(user)
+
+    oauth = OAuth.query.filter_by(provider=blueprint.name, user_id=user.id).first()
+
+    if not oauth:
+        oauth = OAuth(
+            provider=blueprint.name,
+            provider_user_id=user_data["id"],
+            token=token,
+            user=user,
+        )
+    else:
+        oauth.token = token
+
+    db.session.add(oauth)
+    db.session.commit()
+    print(f"Stored token: {oauth.token}")
     login_user(user)
-
-    # here we are saving the user data and token information in session
-    session["user"] = user_data
-    session["google_token"] = {
-        "token": token["access_token"],
-        "refresh_token": token.get("refresh_token"),
-        "client_id": blueprint.client_id,
-        "client_secret": blueprint.client_secret,
-    }
-
-    print("Google token")
-    print(f"Token info: {session['google_token']}")
-
-    return redirect(url_for("routes.index"))
 
 
 @oauth_error.connect_via(google_bp)

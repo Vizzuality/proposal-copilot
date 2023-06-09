@@ -14,14 +14,24 @@ create_doc = Blueprint("create_doc", __name__)
 
 @create_doc.route("/create-doc", methods=["POST"])
 def create_doc_function():
+    if not google.authorized:
+        return jsonify({"error": "User must be logged in to Google"}), 403
+
     # Get the token info from the session
-    token = session.get("google_token")
+    token = google.token
 
     if not token:
         return jsonify({"error": "You must log in"}), 401
 
     # Create a credentials object
-    creds = Credentials.from_authorized_user_info(token)
+    creds = Credentials(
+        token=token["access_token"],
+        refresh_token=token.get("refresh_token", None),
+        id_token=token.get("id_token", None),
+        token_uri="https://accounts.google.com/o/oauth2/token",  # token_uri for Google OAuth2
+        client_id=None,  # not necessary for the operation
+        client_secret=None,
+    )  # not necessary for the operation
 
     # If the credentials are expired and a refresh token is available, refresh the credentials
     if creds.expired and creds.refresh_token:
