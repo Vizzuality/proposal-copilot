@@ -1,5 +1,5 @@
 from googleapiclient.discovery import build
-from flask import Blueprint, redirect, url_for, session, jsonify, request
+from flask import Blueprint, jsonify, request
 from googleapiclient.errors import HttpError
 from google.auth.transport.requests import Request
 from flask_dance.contrib.google import google

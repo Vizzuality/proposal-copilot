@@ -1,8 +1,8 @@
-from flask import Blueprint, redirect, url_for, session, flash
+from flask import Blueprint, redirect, url_for, session
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.consumer import oauth_authorized, oauth_error
 from flask_dance.consumer.storage.sqla import SQLAlchemyStorage
-from flask_login import login_user, UserMixin, LoginManager, logout_user, current_user
+from flask_login import login_user, LoginManager, logout_user, current_user
 from config import google_id as google_id
 from config import google_secret as google_secret
 from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
@@ -40,13 +40,11 @@ def load_user(user_id):
 @oauth_authorized.connect_via(google_bp)
 def google_logged_in(blueprint, token):
     if not token:
-        flash("Failed to log in with Google.", category="error")
-        return False
+        raise Exception("Failed to log in with Google.")
 
     resp = blueprint.session.get("/oauth2/v1/userinfo")
     if not resp.ok:
-        flash("Could not authenticate with Google", category="error")
-        return False
+        raise Exception("Could not authenticate with Google")
 
     user_data = resp.json()
     user = User.query.filter_by(id=user_data["id"]).first()
@@ -78,4 +76,4 @@ def google_error(blueprint, error, error_description=None, error_uri=None):
         f"OAuth error from {blueprint.name}! "
         f"error={error} description={error_description} uri={error_uri}"
     )
-    flash(msg, category="error")
+    raise Exception(msg)
