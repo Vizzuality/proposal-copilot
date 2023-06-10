@@ -58,7 +58,19 @@ Alpine.store("proposalStore", {
   indexName:
     "storage/vector_indexes/faiss_index_react_f16f6f22-65ab-4ef4-a064-acd624ebcf57",
   "proposal-uid": "",
+  resetStore: function () {
+    let container = document.getElementById("editor-content");
+    let elements = container.querySelectorAll(".clonable-proposal-section");
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].parentNode.removeChild(elements[i]);
+    }
 
+    for (let key in this) {
+      if (typeof this[key] !== "function") {
+        this[key] = "";
+      }
+    }
+  },
   updateField(key, value) {
     this[key] = value;
   },
@@ -206,14 +218,10 @@ Alpine.data("mainMenuData", () => ({
   },
 
   loadProposal(documentId) {
-    Alpine.store("mainMenuStore").state = "initial";
+    hideInterface();
     loader.show();
-    let container = document.getElementById("editor-content");
-    let elements = container.querySelectorAll(".clonable-proposal-section");
 
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].parentNode.removeChild(elements[i]);
-    }
+    Alpine.store("proposalStore").resetStore();
 
     const url = `/documents/${encodeURIComponent(documentId)}`;
     return fetch(url, {

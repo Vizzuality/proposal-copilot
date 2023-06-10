@@ -3,7 +3,7 @@ from flask_login import login_required
 import os
 import json
 import glob
-
+import shutil
 
 documents = Blueprint("documents", __name__)
 
@@ -34,5 +34,25 @@ def get_document(id):
         with open(path, "r") as f:
             file_content = json.load(f)
         return jsonify(file_content)
+    else:
+        return jsonify({"error": "File not found"}), 404
+
+
+def delete_document(id):
+    path = "storage/proposals/" + id
+    if os.path.isfile(path):
+        os.remove(path)
+
+        # get the directory path from the 'indexName' field in your JSON file
+        with open(path, "r") as file:
+            data = json.load(file)
+            index_path = data.get(
+                "indexName", ""
+            )  # replace with the correct key if it's not 'indexName'
+
+        if os.path.isdir(index_path):
+            shutil.rmtree(index_path)
+
+        return jsonify({"message": "Document deleted successfully"}), 200
     else:
         return jsonify({"error": "File not found"}), 404
