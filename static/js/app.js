@@ -87,7 +87,7 @@ Alpine.store("messageStore", {
     if (type === "info") {
       setTimeout(() => {
         this.displayMessage = false;
-      }, 2000);
+      }, 3000);
     }
   },
   closeMessage() {
@@ -332,7 +332,7 @@ Alpine.data("mainMenuData", () => ({
       .catch((error) => {
         // Catch any error
         Alpine.store("messageStore").setMessage(
-          "Your session expired. Please, log out and log in again. " + error,
+          "Your session expired. Please, log out and log in again.",
           "error"
         );
         // Handle error here
