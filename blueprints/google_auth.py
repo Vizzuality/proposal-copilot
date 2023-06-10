@@ -41,7 +41,7 @@ def load_user(user_id):
 def google_logged_in(blueprint, token):
     if not token:
         raise Exception("Failed to log in with Google.")
-
+    print(token)
     resp = blueprint.session.get("/oauth2/v1/userinfo")
     if not resp.ok:
         raise Exception("Could not authenticate with Google")
@@ -63,7 +63,9 @@ def google_logged_in(blueprint, token):
             user=user,
         )
     else:
-        oauth.token = token
+        oauth.token["access_token"] = token["access_token"]
+    if "refresh_token" in token:
+        oauth.token["refresh_token"] = token["refresh_token"]
 
     db.session.add(oauth)
     db.session.commit()

@@ -4,9 +4,15 @@ from googleapiclient.errors import HttpError
 from google.auth.transport.requests import Request
 from flask_dance.contrib.google import google
 from config import template_doc_id as template_doc_id
+from config import google_id as google_id
+from config import google_secret as google_secret
 from google.oauth2.credentials import Credentials
 from google.oauth2.credentials import Credentials
 from google.auth.exceptions import RefreshError
+from flask_login import current_user
+
+from models import db, User, OAuth
+
 import re
 
 create_doc = Blueprint("create_doc", __name__)
@@ -23,15 +29,30 @@ def create_doc_function():
     if not token:
         return jsonify({"error": "You must log in"}), 401
 
+    oauth = OAuth.query.filter_by(provider="google", user_id=current_user.id).first()
+
+    if oauth and "refresh_token" in oauth.token:
+        refresh_token = oauth.token["refresh_token"]
+    else:
+        refresh_token = None
     # Create a credentials object
     creds = Credentials(
         token=token["access_token"],
-        refresh_token=token.get("refresh_token", None),
+        refresh_token=refresh_token,
         id_token=token.get("id_token", None),
-        token_uri="https://accounts.google.com/o/oauth2/token",
-        client_id=None,
-        client_secret=None,
+        token_uri="https://oauth2.googleapis.com/token",
+        client_id=google_id,
+        client_secret=google_secret,
     )
+
+    print(f"Token: {creds.token}")
+    print(f"Refresh Token: {creds.refresh_token}")
+    print(f"ID Token: {creds.id_token}")
+    print(f"Token URI: {creds.token_uri}")
+    print(f"Client ID: {creds.client_id}")
+    print(f"Client Secret: {creds.client_secret}")
+    print(f"Expiry: {creds.expired}")
+    print(f"Scopes: {creds.scopes}")
 
     # If the credentials are expired and a refresh token is available, refresh the credentials
     if creds.expired and creds.refresh_token:
@@ -61,7 +82,6 @@ def create_doc_function():
     variables = {}
     proposal_dict = proposal_json.get("proposalJson")
     if proposal_dict:
-        print(f"Proposal dictionary: {proposal_dict}")
         document_body = "\n\n".join(
             remove_markdown(item["response"])
             for item in proposal_dict.values()
