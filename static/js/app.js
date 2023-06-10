@@ -164,6 +164,11 @@ Alpine.data("mainMenuData", () => ({
 
   openDocument() {
     console.log("open document");
+    const url = "/documents";
+    return fetch(url, {
+      method: "POST",
+      body: "",
+    });
   },
   saveProposalJson() {
     console.log("saving document");

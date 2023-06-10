@@ -1,6 +1,7 @@
 from flask import Blueprint, request, render_template, send_from_directory, current_app
 from flask_login import login_required, current_user
 
+
 routes = Blueprint("routes", __name__)
 
 

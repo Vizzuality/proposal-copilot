@@ -10,6 +10,8 @@ from langchain.vectorstores import Pinecone
 
 from config import pinecone_api_key as pinecone_api_key
 from config import pinecone_env as pinecone_env
+from flask_login import login_required
+
 
 similarity = Blueprint("similarity", __name__)
 
@@ -20,6 +22,7 @@ chat = ChatOpenAI(verbose=True, temperature=0)
 
 
 @similarity.route("/similarity", methods=["POST"])
+@login_required
 def similarity_function():
     text_to_search = request.form.get("section-prompt")
     print(request.form)

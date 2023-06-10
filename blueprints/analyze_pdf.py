@@ -4,6 +4,8 @@ import os
 from blueprints.vectorstore_manager import VectorStoreManager
 
 import asyncio
+from flask_login import login_required
+
 
 analyze_pdf = Blueprint("analyze_pdf", __name__)
 
@@ -11,6 +13,7 @@ vectorstore_manager = VectorStoreManager()
 
 
 @analyze_pdf.route("/analyze-pdf", methods=["POST"])
+@login_required
 def analyze_pdf_function():
     index_name = request.form.get("index-name")
     print(index_name)

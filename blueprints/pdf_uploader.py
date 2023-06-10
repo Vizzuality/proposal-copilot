@@ -11,6 +11,8 @@ from langchain.vectorstores import FAISS
 from werkzeug.utils import secure_filename
 
 from config import upload_folder as upload_folder
+from flask_login import login_required
+
 
 pdf_uploader = Blueprint("pdf_uploader", __name__)
 
@@ -22,6 +24,7 @@ def allowed_file(filename):
 
 
 @pdf_uploader.route("/pdf-upload", methods=["POST"])
+@login_required
 async def pdf_upload():
     if "file" not in request.files:
         return jsonify(error="No file part"), 400

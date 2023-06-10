@@ -3,11 +3,14 @@ from tree_of_thoughts import OptimizedOpenAILanguageModel
 from tree_of_thoughts import TreeofThoughts
 from config import openai_api_key as openai_api_key
 from config import chat_model as chat_model
+from flask_login import login_required
+
 
 solve = Blueprint("solve", __name__)
 
 
 @solve.route("/solve", methods=["POST"])
+@login_required
 def solve_function():
     title = request.form.get("section-title")
     prompt_str = request.form.get("section-prompt")

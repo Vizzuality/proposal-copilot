@@ -3,11 +3,13 @@ import uuid
 import json
 
 from flask import Blueprint, jsonify, request
+from flask_login import login_required
 
 save_proposal = Blueprint("save_proposal", __name__)
 
 
 @save_proposal.route("/save-proposal", methods=["POST"])
+@login_required
 def save_json():
     try:
         # Parse JSON

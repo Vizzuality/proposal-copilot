@@ -10,11 +10,14 @@ from langchain.prompts.chat import (
 )
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from config import chat_model as chat_model
+from flask_login import login_required
+
 
 ask_gpt = Blueprint("ask_gpt", __name__)
 
 
 @ask_gpt.route("/ask-gpt", methods=["POST"])
+@login_required
 def ask_gpt_function():
     prompts = [{"title": "askGPTSection", "prompt": request.form.get("section-prompt")}]
     output_dict = {}

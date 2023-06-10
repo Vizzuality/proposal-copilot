@@ -10,6 +10,8 @@ from google.oauth2.credentials import Credentials
 from google.oauth2.credentials import Credentials
 from google.auth.exceptions import RefreshError
 from flask_login import current_user
+from flask_login import login_required
+
 
 from models import db, User, OAuth
 
@@ -19,6 +21,7 @@ create_doc = Blueprint("create_doc", __name__)
 
 
 @create_doc.route("/create-doc", methods=["POST"])
+@login_required
 def create_doc_function():
     if not google.authorized:
         return jsonify({"error": "User must be logged in to Google"}), 403
@@ -129,6 +132,14 @@ def create_doc_function():
         print(f"Copied doc ID: {document_id}")
     except HttpError as error:
         print(f"An error has occurred: {error}")
+        return (
+            jsonify(
+                {
+                    "error": f"Please, save your document, log out and log in again{error}"
+                }
+            ),
+            200,
+        )
 
     result = (
         docs_service.documents()
