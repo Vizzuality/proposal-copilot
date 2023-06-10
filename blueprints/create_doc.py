@@ -66,7 +66,6 @@ def create_doc_function():
 
     # Extract data from JSON request
     proposal_json = request.get_json(force=True)
-    print(f"Received proposal JSON: {proposal_json}")
 
     # Keys to extract from the JSON
     keys = [

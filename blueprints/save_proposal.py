@@ -18,6 +18,7 @@ def save_json():
         # Extract values
         project_name = proposal_json.get("project-name")
         proposal_uid = proposal_json.get("proposal-uid")
+        print(f"Proposal_uid:{proposal_uid}")
 
         if not project_name:
             raise ValueError("Missing 'project name' Analyze or write a project name.")

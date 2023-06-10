@@ -129,7 +129,7 @@ Alpine.store("mainMenuStore", {
           this.state = "generalDataInterface";
           break;
         case "uploadForm":
-          this.state = "uploadForm";
+          this.state = "uploadFormInterface";
           break;
         case "interface4":
           this.state = "state4";
@@ -151,6 +151,9 @@ Alpine.store("mainMenuStore", {
         case "interface9":
           this.state = "state9";
           break;
+        case "fileBrowser":
+          this.state = "fileBrowserInterface";
+          break;
         default:
           this.state = "initial";
       }
@@ -161,15 +164,86 @@ Alpine.store("mainMenuStore", {
 // Main menu functions
 Alpine.data("mainMenuData", () => ({
   tempFormData: null,
-
-  openDocument() {
-    console.log("open document");
+  fileListHtml: "",
+  openFileBrowser() {
     const url = "/documents";
     return fetch(url, {
-      method: "POST",
-      body: "",
-    });
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        data.sort((a, b) => {
+          const aName = a.name.replace(/[^\w]/g, "").toLowerCase();
+          const bName = b.name.replace(/[^\w]/g, "").toLowerCase();
+          return aName.localeCompare(bName);
+        });
+
+        let htmlString = "";
+
+        for (let file of data) {
+          htmlString += `
+          <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+            </svg>
+            <a class="text-sm cursor-pointer hover:text-blue-500 proposalLink" x-on:click.prevent="loadProposal('${file.id}')">${file.name}</a>
+          </div>`;
+        }
+
+        // Update the innerHTML of the ref
+        if (this.$refs.fileList) {
+          this.$refs.fileList.innerHTML = htmlString;
+        } else {
+          // console.warn("fileList reference not found.");
+        }
+      })
+      .catch((error) => {
+        Alpine.store("messageStore").setMessage(
+          "Sorry, I get the file list: " + data["error"],
+          "error"
+        );
+      });
   },
+
+  loadProposal(documentId) {
+    Alpine.store("mainMenuStore").state = "initial";
+    loader.show();
+    let container = document.getElementById("editor-content");
+    let elements = container.querySelectorAll(".clonable-proposal-section");
+
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].parentNode.removeChild(elements[i]);
+    }
+
+    const url = `/documents/${encodeURIComponent(documentId)}`;
+    return fetch(url, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+
+        for (let key in data) {
+          if (data.hasOwnProperty(key) && data[key]) {
+            Alpine.store("proposalStore")[key] = data[key];
+          }
+        }
+        let proposalJson = data["proposalJson"];
+        if (proposalJson && Object.keys(proposalJson).length > 0) {
+          for (let key in proposalJson) {
+            if (proposalJson.hasOwnProperty(key) && proposalJson[key]) {
+              let dataObject = {};
+              dataObject[key] = proposalJson[key];
+              parseResponseAndAppendToDOM(dataObject, true);
+            }
+          }
+        }
+        loader.hide();
+
+        Alpine.store("messageStore").setMessage("Proposal loaded", "info");
+      });
+  },
+
   saveProposalJson() {
     console.log("saving document");
     apiFunctionFactory.saveProposal();
@@ -209,7 +283,10 @@ Alpine.data("mainMenuData", () => ({
       })
       .catch((error) => {
         // Catch any error
-        console.error("Error:", error);
+        Alpine.store("messageStore").setMessage(
+          "Your session expired. Please, log out and log in again.",
+          "error"
+        );
         // Handle error here
       });
   },
@@ -514,7 +591,9 @@ const apiFunctionFactory = {
               " saved succesfully",
             "info"
           );
-          console.log(Alpine.store("proposalStore")["proposal-uid"]);
+          console.log(
+            "proposal-uid" + Alpine.store("proposalStore")["proposal-uid"]
+          );
         }
       });
   },
@@ -805,15 +884,16 @@ function proposalToJson() {
   return proposalStoreJson;
 }
 
-window.loadProposal = function () {
-  let proposalJson = Alpine.store("proposalStore").proposalJson;
+function loadProposal(url) {
+  console.log(url);
+  // let proposalJson = Alpine.store("proposalStore").proposalJson;
 
-  for (let key in proposalJson) {
-    let dataObject = {};
-    dataObject[key] = proposalJson[key];
-    parseResponseAndAppendToDOM(dataObject, true);
-  }
-};
+  // for (let key in proposalJson) {
+  //   let dataObject = {};
+  //   dataObject[key] = proposalJson[key];
+  //   parseResponseAndAppendToDOM(dataObject, true);
+  // }
+}
 
 // Tooltip library
 initTE({ Ripple });

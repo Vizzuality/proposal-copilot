@@ -109,9 +109,9 @@
                 <li>
                   <a
                     x-data="mainMenuData()"
-                    @click.prevent="openDocument"
-                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state2' }"
-                    @click="$store.mainMenuStore.showInterface('interface2')"
+                    @click.prevent="openFileBrowser"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'fileBrowser' }"
+                    @click="$store.mainMenuStore.showInterface('fileBrowser')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -447,7 +447,7 @@
               <div
                 id="upload-form-div"
                 x-data
-                x-show="$store.mainMenuStore.state === 'uploadForm'"
+                x-show="$store.mainMenuStore.state === 'uploadFormInterface'"
                 class="bg-gray-900 text-white"
               >
                 <form
@@ -543,6 +543,57 @@
               </div>
 
               <!-- upload form -->
+              <!-- file Browser -->
+              <div
+                id="file-bowser"
+                x-data
+                x-show="$store.mainMenuStore.state === 'fileBrowserInterface'"
+                class="bg-gray-900 text-white"
+              >
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                  <div class="close-container flex justify-end right-0 mb-2">
+                    <a
+                      x-data="mainMenuData()"
+                      x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === '' }"
+                      @click="$store.mainMenuStore.showInterface('')"
+                      href="#"
+                      class="close text-white hover:text-pink-400 group gap-x-3 rounded-md p-0 text-sm leading-6 font-semibol"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-6 h-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="items-center justify-between">
+                    <div class="items-center">
+                      <div>
+                        <div class="col-span-full" x-data="mainMenuData()">
+                          <div
+                            x-html="fileListHtml"
+                            x-init="openFileBrowser()"
+                            x-ref="fileList"
+                            id="file-list"
+                            class="mt-2 mb-8 overflow-y-scroll max-h-60 rounded-lg border border-dashed border-pink-400 px-6 py-10 grid grid-cols-3 gap-4"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- file Browser -->
+
               <!-- new section form -->
               <div
                 class="editor-toolbar items-center bg-gray-900"
@@ -797,7 +848,10 @@
         </div>
       </main>
     </div>
-    <div id="proposal-section-container" class="group relative">
+    <div
+      id="proposal-section-container"
+      class="group relative clonable-proposal-section"
+    >
       <div
         class="section-interface group-hover:block hidden absolute right-7 bg-gray-300 bg-black bg-opacity-0 hover:bg-opacity-50 transition-opacity duration-200 ease-in rounded-md p-2"
       >

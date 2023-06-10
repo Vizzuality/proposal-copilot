@@ -62,6 +62,7 @@ def google_logged_in(blueprint, token):
             token=token,
             user=user,
         )
+
     else:
         oauth.token["access_token"] = token["access_token"]
     if "refresh_token" in token:

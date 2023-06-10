@@ -3,6 +3,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 basedir = os.path.abspath(os.path.dirname(__file__))
+import logging
+
+logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
+
 SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "app.db")
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 openai_api_key = os.getenv("OPENAI_API_KEY")
