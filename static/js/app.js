@@ -55,8 +55,7 @@ Alpine.store("proposalStore", {
   proposalJson: "",
   month: monthNames[date.getMonth()],
   showForm: false,
-  indexName:
-    "storage/vector_indexes/faiss_index_react_f16f6f22-65ab-4ef4-a064-acd624ebcf57",
+  indexName: "",
   "proposal-uid": "",
   resetStore: function () {
     let container = document.getElementById("editor-content");
@@ -160,8 +159,8 @@ Alpine.store("mainMenuStore", {
         case "createDoc":
           this.state = "createDocInterface";
           break;
-        case "interface9":
-          this.state = "state9";
+        case "destroyDoc":
+          this.state = "destroyDocInterface";
           break;
         case "fileBrowser":
           this.state = "fileBrowserInterface";
@@ -177,6 +176,45 @@ Alpine.store("mainMenuStore", {
 Alpine.data("mainMenuData", () => ({
   tempFormData: null,
   fileListHtml: "",
+  destroyDocument() {
+    Alpine.store("confirmStore").open(
+      "Do you want to delete this document and all its data? This can't be undone.",
+      function () {
+        console.log("destroy doc");
+        console.log(Alpine.store("proposalStore")["proposal-uid"]);
+        let documentID = Alpine.store("proposalStore")["proposal-uid"];
+        const url = "/documents/" + documentID;
+        fetch(url, {
+          method: "DELETE",
+        })
+          .then((response) => {
+            if (!response.ok) {
+              Alpine.store("messageStore").setMessage(
+                "Sorry, there was an error and we couldn't delete the document. " +
+                  response.status,
+                "error"
+              );
+              throw new Error("HTTP error " + response.status);
+            }
+            return response.json();
+          })
+          .then((json) => {
+            console.log(json.message);
+            Alpine.store("proposalStore").resetStore();
+            Alpine.store("messageStore").setMessage(
+              "Document deleted.",
+              "info"
+            );
+          })
+          .catch(function () {
+            Alpine.store("messageStore").setMessage(
+              "Sorry, there was an error and we couldn't delete the document.",
+              "error"
+            );
+          });
+      }
+    );
+  },
   openFileBrowser() {
     const url = "/documents";
     return fetch(url, {
@@ -247,6 +285,8 @@ Alpine.data("mainMenuData", () => ({
           }
         }
         loader.hide();
+        console.log("proposal uid doc");
+        console.log(Alpine.store("proposalStore")["proposal-uid"]);
 
         Alpine.store("messageStore").setMessage("Proposal loaded", "info");
       });
@@ -292,7 +332,7 @@ Alpine.data("mainMenuData", () => ({
       .catch((error) => {
         // Catch any error
         Alpine.store("messageStore").setMessage(
-          "Your session expired. Please, log out and log in again.",
+          "Your session expired. Please, log out and log in again. " + error,
           "error"
         );
         // Handle error here
@@ -385,7 +425,12 @@ Alpine.data("mainMenuData", () => ({
   },
 
   newDocument() {
-    console.log("new file");
+    Alpine.store("confirmStore").open(
+      "Do you want to start from scratch? This can't be undone. All unsaved changes will be lost.",
+      function () {
+        Alpine.store("proposalStore").resetStore();
+      }
+    );
   },
 }));
 

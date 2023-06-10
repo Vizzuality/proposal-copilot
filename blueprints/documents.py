@@ -38,21 +38,22 @@ def get_document(id):
         return jsonify({"error": "File not found"}), 404
 
 
+@documents.route("/documents/<id>", methods=["DELETE"])
+@login_required
 def delete_document(id):
+    print("destroy proposal with id")
+    print(id)
     path = "storage/proposals/" + id
     if os.path.isfile(path):
-        os.remove(path)
-
-        # get the directory path from the 'indexName' field in your JSON file
         with open(path, "r") as file:
             data = json.load(file)
-            index_path = data.get(
-                "indexName", ""
-            )  # replace with the correct key if it's not 'indexName'
+            index_path = data.get("indexName", "")
+
+        os.remove(path)
 
         if os.path.isdir(index_path):
             shutil.rmtree(index_path)
 
         return jsonify({"message": "Document deleted successfully"}), 200
     else:
-        return jsonify({"error": "File not found"}), 404
+        return jsonify({"error": "Bad request"}), 400
