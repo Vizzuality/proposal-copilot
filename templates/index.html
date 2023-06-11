@@ -74,8 +74,8 @@
         <div id="main-toolbar" class="items-center gap-x-6 bg-gray-900 py-0.5">
           <div class="inset-y-0 left-0 z-50 block bg-gray-900" x-data>
             <nav class="">
-              <ul role="list" class="flex items-center space-x-0 px-5">
-                <li>
+              <ul role="list" class="flex px-5">
+                <li class="main-menu-item w-15">
                   <!-- Current: "bg-gray-800 text-white", Default: "text-gray-400 hover:text-white hover:bg-gray-800" -->
                   <a
                     x-data="mainMenuData()"
@@ -83,7 +83,7 @@
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
                     @click="$store.mainMenuStore.showInterface('initial')"
                     href="#"
-                    class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                    class="flex flex-col items-center text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
                     title="New proposal"
                   >
@@ -102,18 +102,18 @@
                       />
                     </svg>
 
-                    <span class="sr-only">New</span>
+                    <span class="menu-item antialiased text-xs mt-1">New</span>
                   </a>
                 </li>
 
-                <li>
+                <li class="main-menu-item w-15">
                   <a
                     x-data="mainMenuData()"
                     @click.prevent="openFileBrowser"
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'fileBrowserInterface' }"
                     @click="$store.mainMenuStore.showInterface('fileBrowser')"
                     href="#"
-                    class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                    class="flex flex-col items-center text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
                     title="Open proposal"
                   >
@@ -131,15 +131,15 @@
                         d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"
                       />
                     </svg>
-                    <span class="sr-only">Open</span>
+                    <span class="menu-item antialiased text-xs mt-1">Open</span>
                   </a>
                 </li>
-                <li>
+                <li class="main-menu-item w-15">
                   <a
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'uploadFormInterface' }"
                     @click="$store.mainMenuStore.showInterface('uploadForm')"
                     href="#"
-                    class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                    class="flex flex-col items-center text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
                     title="Upload document"
                   >
@@ -158,10 +158,12 @@
                       />
                     </svg>
 
-                    <span class="sr-only">Upload</span>
+                    <span class="menu-item antialiased text-xs mt-1"
+                      >Upload</span
+                    >
                   </a>
                 </li>
-                <li>
+                <li class="main-menu-item w-15">
                   <a
                     x-data="mainMenuData()"
                     x-on:click.prevent="getGeneralData"
@@ -169,7 +171,7 @@
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
                     @click="$store.mainMenuStore.showInterface('initial')"
                     href="#"
-                    class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                    class="flex flex-col items-center text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
                     title="Get general data"
                   >
@@ -188,10 +190,10 @@
                       />
                     </svg>
 
-                    <span class="sr-only">General data</span>
+                    <span class="menu-item antialiased text-xs mt-1">Data</span>
                   </a>
                 </li>
-                <li>
+                <li class="main-menu-item w-15">
                   <a
                     x-data="mainMenuData()"
                     x-on:click.prevent="analyzeDocument"
@@ -199,7 +201,7 @@
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
                     @click="$store.mainMenuStore.showInterface('initial')"
                     href="#"
-                    class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                    class="flex flex-col items-center text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
                     title="Analyze"
                   >
@@ -218,15 +220,17 @@
                       />
                     </svg>
 
-                    <span class="sr-only">Analize</span>
+                    <span class="menu-item antialiased text-xs mt-1"
+                      >Analyze</span
+                    >
                   </a>
                 </li>
-                <li>
+                <li class="main-menu-item w-15">
                   <a
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'newSection' }"
                     @click="$store.mainMenuStore.showInterface('newSection')"
                     href="#"
-                    class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                    class="flex flex-col items-center text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
                     title="Add section"
                   >
@@ -245,17 +249,19 @@
                       />
                     </svg>
 
-                    <span class="sr-only">New section</span>
+                    <span class="menu-item antialiased text-xs mt-1"
+                      >Question</span
+                    >
                   </a>
                 </li>
-                <li>
+                <li class="main-menu-item w-15">
                   <a
                     x-data="mainMenuData()"
                     @click.prevent="createEmpty"
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
                     @click="$store.mainMenuStore.showInterface('initial')"
                     href="#"
-                    class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                    class="flex flex-col items-center text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
                     title="Empty section"
                   >
@@ -274,17 +280,19 @@
                       />
                     </svg>
 
-                    <span class="sr-only">Empty section</span>
+                    <span class="menu-item antialiased text-xs mt-1"
+                      >Empty</span
+                    >
                   </a>
                 </li>
-                <li>
+                <li class="main-menu-item w-15">
                   <a
                     x-data="mainMenuData()"
                     @click.prevent="copyToClipboard"
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
                     @click="$store.mainMenuStore.showInterface('initial')"
                     href="#"
-                    class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                    class="flex flex-col items-center text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
                     title="Copy to clipboard"
                   >
@@ -303,17 +311,17 @@
                       />
                     </svg>
 
-                    <span class="sr-only">Copy</span>
+                    <span class="menu-item antialiased text-xs mt-1">Copy</span>
                   </a>
                 </li>
-                <li>
+                <li class="main-menu-item w-15">
                   <a
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
                     x-data="mainMenuData()"
                     @click.prevent="saveProposalJson"
                     @click="$store.mainMenuStore.showInterface('initial')"
                     href="#"
-                    class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                    class="flex flex-col items-center text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
                     title="Save this proposal"
                   >
@@ -332,17 +340,17 @@
                       />
                     </svg>
 
-                    <span class="sr-only">Save</span>
+                    <span class="menu-item antialiased text-xs mt-1">Save</span>
                   </a>
                 </li>
-                <li>
+                <li class="main-menu-item w-15">
                   <a
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
                     x-data="mainMenuData()"
                     @click.prevent="createDoc"
                     @click="$store.mainMenuStore.showInterface('initial')"
                     href="#"
-                    class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                    class="flex flex-col items-center text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
                     title="Save this proposal"
                   >
@@ -361,17 +369,17 @@
                       />
                     </svg>
 
-                    <span class="sr-only">Create Doc</span>
+                    <span class="menu-item antialiased text-xs mt-1">Doc</span>
                   </a>
                 </li>
-                <li>
+                <li class="main-menu-item w-15">
                   <a
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
                     @click="$store.mainMenuStore.showInterface('initial')"
                     x-data="mainMenuData()"
                     @click.prevent="destroyDocument"
                     href="#"
-                    class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                    class="flex flex-col items-center text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
                     title="Destroy this proposal"
                   >
@@ -395,7 +403,9 @@
                       />
                     </svg>
 
-                    <span class="sr-only">Destroy</span>
+                    <span class="menu-item antialiased text-xs mt-1"
+                      >Destroy</span
+                    >
                   </a>
                 </li>
               </ul>
@@ -697,7 +707,7 @@
                   fill="currentFill"
                 />
               </svg>
-              <span class="sr-only">Loading...</span>
+              <span class="menu-item antialiased text-xs mt-1">Loading...</span>
             </div></i
           >
         </span>
@@ -726,6 +736,20 @@
                 <div class="flex flex-wrap -m-2">
                   <div class="w-1/2 p-2">
                     <label
+                      for="project-name"
+                      class="block text-sm font-medium text-gray-700"
+                      >Proposal File and Project Name</label
+                    >
+                    <input
+                      x-data
+                      x-model="$store.proposalStore['project-name']"
+                      type="text"
+                      id="project-name"
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-gray-900 text-sm"
+                    />
+                  </div>
+                  <div class="w-1/2 p-2">
+                    <label
                       for="proposal-title"
                       class="block text-sm font-medium text-gray-700"
                       >Proposal Title</label
@@ -752,20 +776,7 @@
                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-gray-900 text-sm"
                     />
                   </div>
-                  <div class="w-1/2 p-2">
-                    <label
-                      for="project-name"
-                      class="block text-sm font-medium text-gray-700"
-                      >Project Name</label
-                    >
-                    <input
-                      x-data
-                      x-model="$store.proposalStore['project-name']"
-                      type="text"
-                      id="project-name"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-gray-900 text-sm"
-                    />
-                  </div>
+
                   <div class="w-1/2 p-2">
                     <label
                       for="client-main-goal"
