@@ -18,12 +18,15 @@ def save_json():
         # Extract values
         project_name = proposal_json.get("project-name")
         proposal_uid = proposal_json.get("proposal-uid")
-        print(f"Proposal_uid:{proposal_uid}")
 
         if not project_name:
-            raise ValueError("Missing 'project name' Analyze or write a project name.")
+            raise ValueError("Missing 'project name'. Analyze or write a project name.")
 
-        if not proposal_uid:
+        # Split existing proposal_uid on '-uid' to get the project_name part
+        # This assumes that the project_name does not contain '-uid'
+        existing_project_name = proposal_uid.split("-uid")[0] if proposal_uid else None
+
+        if not proposal_uid or project_name != existing_project_name:
             proposal_uid = uuid.uuid4()
             filename = f"{project_name}-uid{proposal_uid}.json"
         else:
