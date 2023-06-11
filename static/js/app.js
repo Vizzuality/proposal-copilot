@@ -130,40 +130,20 @@ Alpine.store("mainMenuStore", {
     if (this.activeInterface !== interfaceName) {
       this.activeInterface = interfaceName;
       switch (interfaceName) {
-        case "interface1":
-          this.state = "state1";
-          break;
-        case "interface2":
-          this.state = "state2";
-          break;
-        case "generalData":
-          this.state = "generalDataInterface";
+        case "fileBrowser":
+          this.state = "fileBrowserInterface";
           break;
         case "uploadForm":
           this.state = "uploadFormInterface";
           break;
-        case "interface4":
-          this.state = "state4";
-          break;
         case "newSection":
           this.state = "newSection";
           break;
-        case "interface6":
-          this.state = "state6";
-          break;
-        case "interface7":
-          this.state = "state7";
-          break;
-        case "interface8":
-          this.state = "state8";
-        case "createDoc":
-          this.state = "createDocInterface";
+        case "interface2":
+          this.state = "state2";
           break;
         case "destroyDoc":
           this.state = "destroyDocInterface";
-          break;
-        case "fileBrowser":
-          this.state = "fileBrowserInterface";
           break;
         default:
           this.state = "initial";
@@ -357,6 +337,7 @@ Alpine.data("mainMenuData", () => ({
     );
   },
   getGeneralData() {
+    console.log("analyzing");
     loader.show();
     if (Alpine.store("proposalStore").indexName === "") {
       Alpine.store("messageStore").setMessage(
@@ -384,6 +365,11 @@ Alpine.data("mainMenuData", () => ({
           }
         }, 1000 * i); // wait i seconds before executing
       }
+    } else {
+      Alpine.store("messageStore").setMessage(
+        "This document has already been analyzed.",
+        "info"
+      );
     }
   },
   analyzeDocument() {
@@ -414,6 +400,11 @@ Alpine.data("mainMenuData", () => ({
           }
         }, 1000 * i); // wait i seconds before executing
       }
+    } else {
+      Alpine.store("messageStore").setMessage(
+        "This document has already been analyzed.",
+        "info"
+      );
     }
   },
   createEmpty() {

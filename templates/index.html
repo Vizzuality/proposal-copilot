@@ -80,8 +80,8 @@
                   <a
                     x-data="mainMenuData()"
                     @click.prevent="newDocument"
-                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state1' }"
-                    @click="$store.mainMenuStore.showInterface('interface1')"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
+                    @click="$store.mainMenuStore.showInterface('initial')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -110,7 +110,7 @@
                   <a
                     x-data="mainMenuData()"
                     @click.prevent="openFileBrowser"
-                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'fileBrowser' }"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'fileBrowserInterface' }"
                     @click="$store.mainMenuStore.showInterface('fileBrowser')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
@@ -136,7 +136,7 @@
                 </li>
                 <li>
                   <a
-                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'uploadForm' }"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'uploadFormInterface' }"
                     @click="$store.mainMenuStore.showInterface('uploadForm')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
@@ -166,8 +166,8 @@
                     x-data="mainMenuData()"
                     x-on:click.once.prevent="getGeneralData"
                     id="generalDataButton"
-                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'generalData' }"
-                    @click="$store.mainMenuStore.showInterface('generalDataInterface')"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
+                    @click="$store.mainMenuStore.showInterface('initial')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -196,8 +196,8 @@
                     x-data="mainMenuData()"
                     x-on:click.once.prevent="analyzeDocument"
                     id="analyzeButton"
-                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state4' }"
-                    @click="$store.mainMenuStore.showInterface('interface4')"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
+                    @click="$store.mainMenuStore.showInterface('initial')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -252,7 +252,7 @@
                   <a
                     x-data="mainMenuData()"
                     @click.prevent="createEmpty"
-                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state6' }"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
                     @click="$store.mainMenuStore.showInterface('initial')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
@@ -281,8 +281,8 @@
                   <a
                     x-data="mainMenuData()"
                     @click.prevent="copyToClipboard"
-                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state7' }"
-                    @click="$store.mainMenuStore.showInterface('interface7')"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
+                    @click="$store.mainMenuStore.showInterface('initial')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -308,10 +308,10 @@
                 </li>
                 <li>
                   <a
-                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'state8' }"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
                     x-data="mainMenuData()"
                     @click.prevent="saveProposalJson"
-                    @click="$store.mainMenuStore.showInterface('interface8')"
+                    @click="$store.mainMenuStore.showInterface('initial')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -337,10 +337,10 @@
                 </li>
                 <li>
                   <a
-                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'createDoc' }"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
                     x-data="mainMenuData()"
                     @click.prevent="createDoc"
-                    @click="$store.mainMenuStore.showInterface('createDocInterface')"
+                    @click="$store.mainMenuStore.showInterface('initial')"
                     href="#"
                     class="text-gray-400 hover:text-white hover:bg-gray-900 group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                     data-te-toggle="tooltip"
@@ -366,8 +366,8 @@
                 </li>
                 <li>
                   <a
-                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'destroyDoc' }"
-                    @click="$store.mainMenuStore.showInterface('destroyDocInterface')"
+                    x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
+                    @click="$store.mainMenuStore.showInterface('initial')"
                     x-data="mainMenuData()"
                     @click.prevent="destroyDocument"
                     href="#"
