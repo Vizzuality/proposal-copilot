@@ -164,7 +164,7 @@
                 <li>
                   <a
                     x-data="mainMenuData()"
-                    x-on:click.once.prevent="getGeneralData"
+                    x-on:click.prevent="getGeneralData"
                     id="generalDataButton"
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
                     @click="$store.mainMenuStore.showInterface('initial')"
@@ -194,7 +194,7 @@
                 <li>
                   <a
                     x-data="mainMenuData()"
-                    x-on:click.once.prevent="analyzeDocument"
+                    x-on:click.prevent="analyzeDocument"
                     id="analyzeButton"
                     x-bind:class="{ 'opacity-50': $store.mainMenuStore.state === 'none' }"
                     @click="$store.mainMenuStore.showInterface('initial')"

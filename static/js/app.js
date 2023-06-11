@@ -337,7 +337,6 @@ Alpine.data("mainMenuData", () => ({
     );
   },
   getGeneralData() {
-    console.log("analyzing");
     loader.show();
     if (Alpine.store("proposalStore").indexName === "") {
       Alpine.store("messageStore").setMessage(
@@ -370,6 +369,7 @@ Alpine.data("mainMenuData", () => ({
         "This document has already been analyzed.",
         "info"
       );
+      loader.hide();
     }
   },
   analyzeDocument() {
@@ -405,6 +405,7 @@ Alpine.data("mainMenuData", () => ({
         "This document has already been analyzed.",
         "info"
       );
+      loader.hide();
     }
   },
   createEmpty() {
