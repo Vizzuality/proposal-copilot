@@ -29,38 +29,37 @@ def create_doc_function():
     if not token:
         return jsonify({"error": "You must log in"}), 401
 
-    # if "refresh_token" in token:
-    #     refresh_token = token["refresh_token"]
-    # else:
-    #     refresh_token = None
+    # If refresh_token is present in token, use it, and save it in database
+    if "refresh_token" in token:
+        oauth_model.refresh_token = token["refresh_token"]
+        db.session.commit()
+        refresh_token = token["refresh_token"]
+    else:
+        # If refresh_token is not present in token, use the one stored in database (if it exists)
+        refresh_token = oauth_model.refresh_token
 
-    # Create a credentials object
     creds = Credentials(
         token=token["access_token"],
         id_token=token.get("id_token", None),
         token_uri="https://oauth2.googleapis.com/token",
         client_id=google_id,
         client_secret=google_secret,
+        enable_reauth_refresh=True,
+        refresh_token=refresh_token,
+        scopes=[
+            "https://www.googleapis.com/auth/userinfo.email",
+            "https://www.googleapis.com/auth/drive",
+        ],
     )
 
     print(f"Token: {creds.token}")
+    print(f"Refresh Token: {creds.refresh_token}")
     print(f"ID Token: {creds.id_token}")
     print(f"Token URI: {creds.token_uri}")
     print(f"Client ID: {creds.client_id}")
     print(f"Client Secret: {creds.client_secret}")
     print(f"Expiry: {creds.expired}")
     print(f"Scopes: {creds.scopes}")
-
-    # If the credentials are expired and a refresh token is available, refresh the credentials
-    if creds.expired and creds.refresh_token:
-        try:
-            creds.refresh(Request())
-        except RefreshError as e:
-            return jsonify({"error": "Access token could not be refreshed"}), 401
-        else:
-            # After refreshing, update the token in the database
-            oauth.token["access_token"] = creds.token
-            db.session.commit()
 
     # Extract data from JSON request
     proposal_json = request.get_json(force=True)

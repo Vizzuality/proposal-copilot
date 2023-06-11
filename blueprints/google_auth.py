@@ -4,7 +4,7 @@ from flask import Blueprint, redirect, url_for, session, request, jsonify
 from config import google_id as google_id
 from config import google_secret as google_secret
 from models import db, User, OAuth as OAuthModel
-from authlib.integrations.flask_client import OAuth
+import uuid
 
 google_auth = Blueprint("google_auth", __name__)
 
@@ -17,6 +17,10 @@ oauth.register(
     client_secret=google_secret,
     access_token_url="https://accounts.google.com/o/oauth2/token",
     access_token_params=None,
+    authorize_params={
+        "access_type": "offline",
+        "prompt": "consent",
+    },  # Add this line to request refresh token
     refresh_token_url=None,
     server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
     authorize_url="https://accounts.google.com/o/oauth2/auth",
@@ -56,10 +60,18 @@ def authorize():
 
     if not oauth_model:
         oauth_model = OAuthModel(
-            provider="google", provider_user_id=user_info["id"], token=token, user=user
+            id=str(uuid.uuid4()),
+            provider="google",
+            provider_user_id=user_info["id"],
+            token=token,
+            user=user,
+            refresh_token=token.get("refresh_token", None),
         )
     else:
         oauth_model.token = token
+        # Update refresh_token only if a new one has been issued
+        if "refresh_token" in token:
+            oauth_model.refresh_token = token["refresh_token"]
 
     db.session.add(oauth_model)
     db.session.commit()
