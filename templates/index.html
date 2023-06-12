@@ -591,6 +591,12 @@
                     <div class="items-center">
                       <div>
                         <div class="col-span-full" x-data="mainMenuData()">
+                          <button
+                            class="text-xs items-center whitespace-nowrap rounded px-2 py-1 text-sm font-medium text-gray-100 hover:bg-pink-500 bg-pink-600"
+                            x-on:click="openFileBrowser()"
+                          >
+                            Refresh the list of files
+                          </button>
                           <div
                             x-html="fileListHtml"
                             x-init="openFileBrowser()"

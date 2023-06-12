@@ -223,10 +223,7 @@ Alpine.data("mainMenuData", () => ({
         if (this.$refs.fileList) {
           this.$refs.fileList.innerHTML = htmlString;
         } else {
-          Alpine.store("messageStore").setMessage(
-            "Sorry, I couldn't parse the file list",
-            "error"
-          );
+          // Do nothing
         }
       })
       .catch((error) => {
