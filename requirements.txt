@@ -20,3 +20,4 @@ flask_login
 httplib2
 Flask-SQLAlchemy
 Flask-Migrate
+gunicorn
