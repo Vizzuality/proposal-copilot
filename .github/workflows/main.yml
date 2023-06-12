@@ -18,9 +18,9 @@ jobs:
         ssh-keyscan -H ${{ secrets.SERVER }} > ~/.ssh/known_hosts
         eval "$(ssh-agent -s)"
         ssh-add ~/.ssh/id_rsa
-        
+
     - name: connect, pull, build, and restart
-      run: ssh -v ${{ secrets.USERNAME }}@${{ secrets.SERVER }} "export PATH=\"/home/ubuntu/.nvm/versions/node/v18.16.0/bin:/home/ubuntu/.nvm/versions/node/v18.16.0/bin/yarn:\$PATH\" && cd /home/ubuntu/proposal-copilot && git fetch origin main && git reset --hard origin/main && git clean -f -d -x --exclude=.env --exclude=storage && git pull origin main --force && pip install -r requirements.txt && yarn install && yarn build && yarn build:js && sudo systemctl restart proposal-copilot.service && exit"
+      run: ssh -v ${{ secrets.USERNAME }}@${{ secrets.SERVER }} "export PATH=\"/home/ubuntu/.nvm/versions/node/v18.16.0/bin:/home/ubuntu/.nvm/versions/node/v18.16.0/bin/yarn:\$PATH\" && cd /home/ubuntu/proposal-copilot && git fetch origin main && git reset --hard origin/main && git clean -f -d -x --exclude=.env --exclude=storage && git pull origin main --force && /home/ubuntu/.pyenv/shims/pip install -r requirements.txt && yarn install && yarn build && yarn build:js && sudo systemctl restart proposal-copilot.service && exit"
 
 
     - name: cleanup
