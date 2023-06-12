@@ -223,12 +223,15 @@ Alpine.data("mainMenuData", () => ({
         if (this.$refs.fileList) {
           this.$refs.fileList.innerHTML = htmlString;
         } else {
-          // console.warn("fileList reference not found.");
+          Alpine.store("messageStore").setMessage(
+            "Sorry, I couldn't parse the file list",
+            "error"
+          );
         }
       })
       .catch((error) => {
         Alpine.store("messageStore").setMessage(
-          "Sorry, I get the file list: " + data["error"],
+          "Sorry, I couldn't get the file list: " + data["error"],
           "error"
         );
       });
