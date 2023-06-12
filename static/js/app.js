@@ -1,5 +1,4 @@
 import Alpine from "alpinejs";
-import { Ripple, initTE } from "tw-elements";
 import showdown from "showdown";
 import TurndownService from "turndown";
 import Quill from "quill";
@@ -928,20 +927,6 @@ function proposalToJson() {
   let proposalStoreJson = JSON.stringify(proposalStore);
   return proposalStoreJson;
 }
-
-function loadProposal(url) {
-  console.log(url);
-  // let proposalJson = Alpine.store("proposalStore").proposalJson;
-
-  // for (let key in proposalJson) {
-  //   let dataObject = {};
-  //   dataObject[key] = proposalJson[key];
-  //   parseResponseAndAppendToDOM(dataObject, true);
-  // }
-}
-
-// Tooltip library
-initTE({ Ripple });
 
 // Start alpine
 Alpine.start();
