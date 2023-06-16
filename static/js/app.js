@@ -173,6 +173,8 @@ Alpine.data("mainMenuData", () => ({
                   response.status,
                 "error"
               );
+              loader.hide();
+
               throw new Error("HTTP error " + response.status);
             }
             return response.json();
@@ -190,6 +192,7 @@ Alpine.data("mainMenuData", () => ({
               "Sorry, there was an error and we couldn't delete the document.",
               "error"
             );
+            loader.hide();
           });
       }
     );
@@ -231,6 +234,7 @@ Alpine.data("mainMenuData", () => ({
           "Sorry, I couldn't get the file list: " + data["error"],
           "error"
         );
+        loader.hide();
       });
   },
 
@@ -297,6 +301,8 @@ Alpine.data("mainMenuData", () => ({
             "Sorry, I couldn't create the doc: " + data["error"],
             "error"
           );
+          loader.hide();
+
           throw new Error("Error creating the document."); // throw an error to stop execution
         } else {
           Alpine.store("messageStore").setMessage(
@@ -332,6 +338,7 @@ Alpine.data("mainMenuData", () => ({
           "Could not copy text: " + err,
           "error"
         );
+        loader.hide();
       }
     );
   },
@@ -592,6 +599,7 @@ const apiFunctionFactory = {
             "Sorry, an error occurred: " + data["error"],
             "error"
           );
+          loader.hide();
         } else {
           Alpine.store("proposalStore")["project-name"] = data["response"];
           Alpine.store("proposalStore").indexName = data["vector_index"];
@@ -605,6 +613,7 @@ const apiFunctionFactory = {
           "Sorry, an error occurred: " + error,
           "error"
         );
+        loader.hide();
       });
   },
   saveProposal: function () {
@@ -624,6 +633,8 @@ const apiFunctionFactory = {
             "Sorry, I couldn't save the proposal: " + data["error"],
             "error"
           );
+          loader.hide();
+
           throw new Error("Error saving the proposal.");
         } else {
           console.log("saved proposal");
@@ -647,6 +658,7 @@ const apiFunctionFactory = {
         "Please, upload a document first",
         "error"
       );
+      loader.hide();
     }
     let data = {
       Empty: {
@@ -724,6 +736,7 @@ const apiFunctionFactory = {
             "Sorry, an error occurred: " + data["error"],
             "error"
           );
+          loader.hide();
         } else {
           if (analysisType === "general-data") {
             parseGeneralDataAndAppendToDOM(data);
@@ -745,6 +758,8 @@ const apiFunctionFactory = {
           "Sorry, an error occurred: " + error,
           "error"
         );
+        loader.hide();
+
         console.error("Error:", error);
       });
   },
@@ -803,6 +818,8 @@ function getButtonData(button) {
       "Sorry, an error occurred: missing container",
       "error"
     );
+    loader.hide();
+
     return null;
   }
   const sectionName = containerDiv.id.slice("section-container-".length);
